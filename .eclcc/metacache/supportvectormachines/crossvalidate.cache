@@ -1,0 +1,11 @@
+<Cache hash="3275204131620305104">
+<Attr module="SupportVectorMachines" name="crossvalidate">
+ <Depend module="SupportVectorMachines" name="types"/>
+ <Depend module="SupportVectorMachines.libsvm" name="types"/>
+ <Depend module="SupportVectorMachines.libsvm" name="converted"/>
+ <Depend module="ML_Core" name="types"/>
+ <Depend module="SupportVectorMachines" name="converted"/>
+ <Depend module="SupportVectorMachines" name="scale"/>
+ <Depend module="SupportVectorMachines.libsvm" name="svmcrossvalidate"/>
+</Attr>
+</Cache>

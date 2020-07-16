@@ -1,0 +1,11 @@
+<Cache hash="3275204131620305104">
+<Attr module="SEC_2_Vec.sentiment" name="sent_model">
+ <Depend module="TextVectors" name="types"/>
+ <Depend module="ML_Core" name="types"/>
+ <Depend module="TextVectors" name="sentencevectors"/>
+ <Depend module="SEC_2_Vec.sentiment" name="sent_setup_norm"/>
+ <Depend module="ML_Core" name="tofield"/>
+ <Depend module="LogisticRegression" name="binomiallogisticregression"/>
+ <Depend module="LogisticRegression" name="constants"/>
+</Attr>
+</Cache>
