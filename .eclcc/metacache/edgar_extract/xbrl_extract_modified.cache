@@ -1,0 +1,6 @@
+<Cache hash="3275204131620305104">
+<Attr module="EDGAR_Extract" name="xbrl_extract_modified">
+ <Depend module="EDGAR_Extract" name="raw_input_files"/>
+ <Depend module="EDGAR_Extract" name="extract_layout_modified"/>
+</Attr>
+</Cache>
