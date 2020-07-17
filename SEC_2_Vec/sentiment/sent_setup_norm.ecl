@@ -263,9 +263,9 @@ EXPORT sent_setup_norm(DATASET(Types.Sentence) tsents,DATASET(Types.TextMod) big
     //trying without removing 0s...
     svb_no0 := svb_cpy;
 
-    svb_ordered := SORT(svb_no0,svb_no0.sentId);
-    svb_grp := GROUP(svb_ordered,sentId);
-    //svb_sid := DEDUP(svb_no0,sentId);
+    //svb_ordered := SORT(svb_no0,svb_no0.sentId);
+    //svb_grp := GROUP(svb_ordered,sentId);
+    svb_sid := DEDUP(svb_no0,sentId);
 
     //svbrec := RECORDOF(svb_no0);
 
@@ -281,24 +281,32 @@ EXPORT sent_setup_norm(DATASET(Types.Sentence) tsents,DATASET(Types.TextMod) big
       RETURN tv.Internal.svUtils.normalizeVector(totvec);
     END;
 
-    wrec grproll(wrec L,DATASET(wrec) R) := TRANSFORM
-      SELF.word := L.word;
-      SELF.sentId := L.sentId;
-      SELF.text := L.text;
-      SELF.tfidf_score := L.tfidf_score;
-      SELF.w_Vector := get_tot_vec(R);
+    t_Vector roll_tot_vec(DATASET(wrec) r) := FUNCTION
+      wrec rtv_T(wrec lr,wrec rr) := TRANSFORM
+        SELF.w_Vector := tv.Internal.svUtils.normalizeVector(addvecs(lr.w_Vector,rr.w_Vector));
+        SELF := rr;
+      END;
+      RETURN ROLLUP(r,TRUE,rtv_T(LEFT,RIGHT)).w_Vector;
     END;
 
-    // wrec grpproj(wrec L) := TRANSFORM
+    // wrec grproll(wrec L,DATASET(wrec) R) := TRANSFORM
     //   SELF.word := L.word;
     //   SELF.sentId := L.sentId;
     //   SELF.text := L.text;
     //   SELF.tfidf_score := L.tfidf_score;
-    //   SELF.w_Vector := get_tot_vec(svb_no0(sentId=L.sentId));
+    //   SELF.w_Vector := get_tot_vec(R);
     // END;
 
-    out := ROLLUP(svb_grp,GROUP,grproll(LEFT,ROWS(LEFT)));
-    //out := PROJECT(svb_sid,grpproj(LEFT),LOCAL);
+    wrec grpproj(wrec L) := TRANSFORM
+      SELF.word := L.word;
+      SELF.sentId := L.sentId;
+      SELF.text := L.text;
+      SELF.tfidf_score := L.tfidf_score;
+      SELF.w_Vector := get_tot_vec(svb_no0(sentId=L.sentId));
+    END;
+
+    //out := ROLLUP(svb_grp,GROUP,grproll(LEFT,ROWS(LEFT)));
+    out := PROJECT(svb_sid,grpproj(LEFT),LOCAL);
 
     //outrec := RECORDOF(out_tot);
 
