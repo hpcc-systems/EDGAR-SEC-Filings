@@ -1,3 +1,5 @@
+IMPORT PYTHON3 AS Python;
+IMPORT * FROM Python;
 IMPORT * FROM GNN;
 IMPORT * FROM SEC_2_Vec.sentiment;
 IMPORT ML_Core.Types;
@@ -25,9 +27,9 @@ SELF.number := LEFT.number,
 SELF.value := (REAL8) LEFT.value));
 
 X_tens := Tensor.R4.dat.fromMatrix(Xn);
-X := Tensor.R4.MakeTensor([100,1],X_tens);
+X := Tensor.R4.MakeTensor([0,100],X_tens);
 Y_tens := Tensor.R4.dat.FromMatrix(Yn);
-Y := Tensor.R4.MakeTensor([1,1],Y_tens);
+Y := Tensor.R4.MakeTensor([0,1],Y_tens);
 
 mod := GNNI.Fit(sess_b,X,Y);
 
