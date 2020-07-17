@@ -20,8 +20,8 @@ CF2 := ClassificationForest(50,0,50);
 CF3 := ClassificationForest(50,0,25);
 CF4 := ClassificationForest(50,0,10);
 
-X := DATASET(WORKUNIT('W20200717-024906','X_sec12'),nf);
-Y := DATASET(WORKUNIT('W20200717-024906','Y_sec12'),df);
+X := DATASET(WORKUNIT('W20200717-065422','X_sec13'),nf);
+Y := DATASET(WORKUNIT('W20200717-065422','Y_sec13'),df);
 
 mod1 := CF1.GetModel(X,Y);
 mod2 := CF2.GetModel(X,Y);

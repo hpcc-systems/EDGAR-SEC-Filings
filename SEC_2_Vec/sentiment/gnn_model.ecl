@@ -1,0 +1,34 @@
+IMPORT * FROM GNN;
+IMPORT * FROM SEC_2_Vec.sentiment;
+IMPORT ML_Core.Types;
+nf := Types.NumericField;
+df := Types.DiscreteField;
+t_tens := Tensor.R4.t_Tensor;
+
+mod_form := ['GRU(units=32,dropout=0.2,recurrent_dropout=0.2)',
+             'Dense(1,activation="sigmoid")'];
+
+mod_comp := ['loss="binary_crossentropy",optimizer="adam",metrics=["accuracy"]'];
+
+sess_a := GNNI.GetSession();
+sess_b := GNNI.DefineModel(sess_a,mod_form,mod_comp[1]);
+
+spdat := sentiment.tests.sandplblvn;
+ff := sentiment.sent_model.getFields(spdat);
+Xn := ff.NUMF;
+Yd := ff.DSCF;
+
+Yn := PROJECT(Yd,TRANSFORM(nf,
+SELF.wi := LEFT.wi,
+SELF.id := LEFT.id,
+SELF.number := LEFT.number,
+SELF.value := (REAL8) LEFT.value));
+
+X_tens := Tensor.R4.dat.fromMatrix(Xn);
+X := Tensor.R4.MakeTensor([100,1],X_tens);
+Y_tens := Tensor.R4.dat.FromMatrix(Yn);
+Y := Tensor.R4.MakeTensor([1,1],Y_tens);
+
+mod := GNNI.Fit(sess_b,X,Y);
+
+OUTPUT(GNNI.EvaluateMod(mod,X,Y));

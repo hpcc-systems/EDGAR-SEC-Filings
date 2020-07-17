@@ -2,6 +2,7 @@ IMPORT LearningTrees as LT;
 IMPORT * FROM LT;
 IMPORT ML_Core.Types as CTypes;
 IMPORT LogisticRegression as LR;
+IMPORT * FROM SEC_2_Vec.sentiment.tests;
 
 //we have generated Classification Forest models for 
 //sectors 1,2, and 3 at depths of 100,50,25, and 10 
@@ -11,6 +12,9 @@ IMPORT LogisticRegression as LR;
 Layout_Model2 := CTypes.Layout_Model2;
 nf := CTypes.NumericField;
 df := CTypes.DiscreteField;
+conrec := LR.Types.Binomial_Confusion_Summary;
+
+secs := sectors.sectorlist;
 
 //load sector 1 models
 sec1_100 := DATASET(WORKUNIT('W20200717-031009','mod100'),Layout_Model2);
@@ -113,66 +117,77 @@ con5_100 := LR.BinomialConfusion(precon5_100);
 precon6_100 := LR.Confusion(Y6,preds6_100);
 con6_100 := LR.BinomialConfusion(precon6_100);
 
-precon1_50 := LR.Confusion(Y1,preds1_100);
+precon1_50 := LR.Confusion(Y1,preds1_50);
 con1_50 := LR.BinomialConfusion(precon1_50);
-precon2_50 := LR.Confusion(Y2,preds2_100);
+precon2_50 := LR.Confusion(Y2,preds2_50);
 con2_50 := LR.BinomialConfusion(precon2_50);
-precon3_50 := LR.Confusion(Y3,preds3_100);
+precon3_50 := LR.Confusion(Y3,preds3_50);
 con3_50 := LR.BinomialConfusion(precon3_50);
-precon4_50 := LR.Confusion(Y4,preds4_100);
+precon4_50 := LR.Confusion(Y4,preds4_50);
 con4_50 := LR.BinomialConfusion(precon4_50);
-precon5_50 := LR.Confusion(Y5,preds5_100);
+precon5_50 := LR.Confusion(Y5,preds5_50);
 con5_50 := LR.BinomialConfusion(precon5_50);
-precon6_50 := LR.Confusion(Y6,preds6_100);
+precon6_50 := LR.Confusion(Y6,preds6_50);
 con6_50 := LR.BinomialConfusion(precon6_50);
 
-precon1_25 := LR.Confusion(Y1,preds1_100);
+precon1_25 := LR.Confusion(Y1,preds1_25);
 con1_25 := LR.BinomialConfusion(precon1_25);
-precon2_25 := LR.Confusion(Y2,preds2_100);
+precon2_25 := LR.Confusion(Y2,preds2_25);
 con2_25 := LR.BinomialConfusion(precon2_25);
-precon3_25 := LR.Confusion(Y3,preds3_100);
+precon3_25 := LR.Confusion(Y3,preds3_25);
 con3_25 := LR.BinomialConfusion(precon3_25);
-precon4_25 := LR.Confusion(Y4,preds4_100);
+precon4_25 := LR.Confusion(Y4,preds4_25);
 con4_25 := LR.BinomialConfusion(precon4_25);
-precon5_25 := LR.Confusion(Y5,preds5_100);
+precon5_25 := LR.Confusion(Y5,preds5_25);
 con5_25 := LR.BinomialConfusion(precon5_25);
-precon6_25 := LR.Confusion(Y6,preds6_100);
+precon6_25 := LR.Confusion(Y6,preds6_25);
 con6_25 := LR.BinomialConfusion(precon6_25);
 
-precon1_10 := LR.Confusion(Y1,preds1_100);
+precon1_10 := LR.Confusion(Y1,preds1_10);
 con1_10 := LR.BinomialConfusion(precon1_10);
-precon2_10 := LR.Confusion(Y2,preds2_100);
+precon2_10 := LR.Confusion(Y2,preds2_10);
 con2_10 := LR.BinomialConfusion(precon2_10);
-precon3_10 := LR.Confusion(Y3,preds3_100);
+precon3_10 := LR.Confusion(Y3,preds3_10);
 con3_10 := LR.BinomialConfusion(precon3_10);
-precon4_10 := LR.Confusion(Y4,preds4_100);
+precon4_10 := LR.Confusion(Y4,preds4_10);
 con4_10 := LR.BinomialConfusion(precon4_10);
-precon5_10 := LR.Confusion(Y5,preds5_100);
+precon5_10 := LR.Confusion(Y5,preds5_10);
 con5_10 := LR.BinomialConfusion(precon5_10);
-precon6_10 := LR.Confusion(Y6,preds6_100);
+precon6_10 := LR.Confusion(Y6,preds6_10);
 con6_10 := LR.BinomialConfusion(precon6_10);
 
-OUTPUT(con1_100);
-OUTPUT(con1_50);
-OUTPUT(con1_25);
-OUTPUT(con1_10);
-OUTPUT(con2_100);
-OUTPUT(con2_50);
-OUTPUT(con2_25);
-OUTPUT(con2_10);
-OUTPUT(con3_100);
-OUTPUT(con3_50);
-OUTPUT(con3_25);
-OUTPUT(con3_10);
-OUTPUT(con4_100);
-OUTPUT(con4_50);
-OUTPUT(con4_25);
-OUTPUT(con4_10);
-OUTPUT(con5_100);
-OUTPUT(con5_50);
-OUTPUT(con5_25);
-OUTPUT(con5_10);
-OUTPUT(con6_100);
-OUTPUT(con6_50);
-OUTPUT(con6_25);
-OUTPUT(con6_10);
+conset := [con1_100,con1_50,con1_25,con1_10,
+        con2_100,con2_50,con2_25,con2_10,
+        con3_100,con3_50,con3_25,con3_10,
+        con4_100,con4_50,con4_25,con4_10,
+        con5_100,con5_50,con5_25,con5_10,
+        con6_100,con6_50,con6_25,con6_10];
+
+depth := [100,50,25,10];
+
+outrec := RECORD
+    STRING sector;
+    INTEGER depth;
+    REAL8 acc;
+END;
+
+idrec := RECORD
+    INTEGER i;
+END;
+
+idstrt := RECORD
+    INTEGER i := 0;
+END;
+
+outrec acc_T(idrec C) := TRANSFORM
+    SELF.sector := secs[TRUNCATE((C.i-1)/4)];
+    SELF.depth := depth[(C.i%4)+1];
+    SELF.acc := conset[C.i][1].accuracy;
+END;
+
+cid1 := DATASET(24,TRANSFORM(idrec,SELF.i := 0));
+cidx := ITERATE(cid1,TRANSFORM(idrec,SELF.i := LEFT.i+1));
+
+out := PROJECT(cidx,acc_T(LEFT));
+
+OUTPUT(out);
