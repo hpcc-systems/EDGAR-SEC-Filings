@@ -20,12 +20,20 @@ outrec := RECORD
     REAL8 acc10;
     REAL8 pod_100;
     REAL8 pode_100;
+    REAL8 hpod_100;
+    REAL8 hpode_100;
     REAL8 pod_50;
     REAL8 pode_50;
+    REAL8 hpod_50;
+    REAL8 hpode_50;
     REAL8 pod_25;
     REAL8 pode_25;
+    REAL8 hpod_25;
+    REAL8 hpode_25;
     REAL8 pod_10;
     REAL8 pode_10;
+    REAL8 hpod_10;
+    REAL8 hpode_10;
 END;
 
 CF1 := LT.ClassificationForest();
@@ -38,12 +46,19 @@ secs := sectors.sectorlist;
 make_cfs(INTEGER n) := FUNCTION
 
     sect := secs[n];
-    datn := vansents(get_tick(fname) IN SET(sectors.sectorticker(sector=sect),ticker));
+    datn_all := vansents(get_tick(fname) IN SET(sectors.sectorticker(sector=sect),ticker));
+    datn := datn_all(id%2=0);
+    dath := datn_all(id%2=1);
 
     ff := sm.getFields(datn);
 
     X := ff.NUMF;
     Y := ff.DSCF;
+
+    ff_h := sm.getFields(dath);
+
+    Xh := ff_h.NUMF;
+    Yh := ff_h.DSCF;
 
     mod1 := CF1.GetModel(X,Y);
     mod2 := CF2.GetModel(X,Y);
@@ -51,9 +66,13 @@ make_cfs(INTEGER n) := FUNCTION
     mod4 := CF4.GetModel(X,Y);
 
     preds1 := CF1.Classify(mod1,X);
+    preds1h := CF1.Classify(mod1,Xh);
     preds2 := CF2.Classify(mod2,X);
+    preds2h := CF2.Classify(mod2,Xh);
     preds3 := CF3.Classify(mod3,X);
+    preds3h := CF3.Classify(mod3,Xh);
     preds4 := CF4.Classify(mod4,X);
+    preds4h := CF4.Classify(mod4,Xh);
 
     precon1 := LR.Confusion(Y,preds1);
     con1 := LR.BinomialConfusion(precon1);
@@ -65,9 +84,13 @@ make_cfs(INTEGER n) := FUNCTION
     con4 := LR.BinomialConfusion(precon4);
 
     pod1 := ml_ac.Accuracy(preds1,Y);
+    pod1h := ml_ac.Accuracy(preds1h,Yh);
     pod2 := ml_ac.Accuracy(preds2,Y);
+    pod2h := ml_ac.Accuracy(preds2h,Yh);
     pod3 := ml_ac.Accuracy(preds3,Y);
+    pod3h := ml_ac.Accuracy(preds3h,Yh);
     pod4 := ml_ac.Accuracy(preds4,Y);
+    pod4h := ml_ac.Accuracy(preds4h,Yh);
 
     result := MODULE
         EXPORT sec := sect;
@@ -77,17 +100,27 @@ make_cfs(INTEGER n) := FUNCTION
         EXPORT acc4 := con4[1].accuracy;
         EXPORT p1 := pod1[1].pod;
         EXPORT pe1 := pod1[1].pode;
+        EXPORT hp1 := pod1h[1].pod;
+        EXPORT hpe1 := pod1h[1].pode;
         EXPORT p2 := pod2[1].pod;
         EXPORT pe2 := pod2[1].pode;
+        EXPORT hp2 := pod2h[1].pod;
+        EXPORT hpe2 := pod2h[1].pode;
         EXPORT p3 := pod3[1].pod;
         EXPORT pe3 := pod3[1].pode;
+        EXPORT hp3 := pod3h[1].pod;
+        EXPORT hpe3 := pod3h[1].pode;
         EXPORT p4 := pod4[1].pod;
         EXPORT pe4 := pod4[1].pode;
+        EXPORT hp4 := pod4h[1].pod;
+        EXPORT hpe4 := pod4h[1].pode;
     END;
 
     RETURN DATASET([{result.sec,result.acc1,result.acc2,result.acc3,result.acc4,
-                    result.p1,result.pe1,result.p2,result.pe2,result.p3,result.pe3,
-                    result.p4,result.pe4}],outrec);
+                    result.p1,result.pe1,result.hp1,result.hpe1,
+                    result.p2,result.pe2,result.hp2,result.hpe2,
+                    result.p3,result.pe3,result.hp3,result.hpe3,
+                    result.p4,result.pe4,result.hp4,result.hpe4}],outrec);
 
 END;
 
