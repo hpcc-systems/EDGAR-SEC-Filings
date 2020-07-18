@@ -77,17 +77,18 @@ EXPORT tree_test_pipeline(STRING approach='plain') := MODULE
         RETURN result;
     END;
 
-    zrds := DATASET(COUNT(secs),TRANSFORM(idrec,SELF.i:=0));
-    ctds := ITERATE(zrds,TRANSFORM(idrec,SELF.i := LEFT.i + 1));
+    //zrds := DATASET(COUNT(secs),TRANSFORM(idrec,SELF.i:=0));
+    //ctds := ITERATE(zrds,TRANSFORM(idrec,SELF.i := LEFT.i + 1));
 
-    Tree_Param_Comparison out_T(idrec idrow) := TRANSFORM
-        SELF.sector := secs[TRUNCATE((idrow.i-1)/4)];
-        accres := sector_tick(idrow.i);
+    Tree_Param_Comparison out_T(INTEGER i) := TRANSFORM
+        SELF.sector := secs[i];
+        accres := sector_tick(i);
         SELF.acc100 := accres.acc1;
         SELF.acc50 := accres.acc2;
         SELF.acc25 := accres.acc3;
         SELF.acc10 := accres.acc4;
     END;
 
-    EXPORT comparison := PROJECT(ctds,out_T(LEFT));
+    //EXPORT comparison := PROJECT(ctds,out_T(LEFT));
+    EXPORT comparison := DATASET(COUNT(secs),out_T(COUNTER));
 END;

@@ -7,7 +7,9 @@ nf := Types.NumericField;
 df := Types.DiscreteField;
 t_tens := Tensor.R4.t_Tensor;
 
-mod_form := ['GRU(units=32,dropout=0.2,recurrent_dropout=0.2)',
+mod_form :=  ['Dense(64, input_shape=(100,))',
+//[//'GRU(units=32,dropout=0.2,recurrent_dropout=0.2)',
+            'Dense(32)',
              'Dense(1,activation="sigmoid")'];
 
 mod_comp := ['loss="binary_crossentropy",optimizer="adam",metrics=["accuracy"]'];
