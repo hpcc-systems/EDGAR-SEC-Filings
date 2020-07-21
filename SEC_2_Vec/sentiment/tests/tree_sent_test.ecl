@@ -67,8 +67,11 @@ make_cfs(INTEGER n) := FUNCTION
 
     sect := secs[n];
     datn_all := vansents(get_tick(fname) IN SET(sectors.sectorticker(sector=sect),ticker));
-    datn := datn_all(id%2=0);
-    dath := datn_all(id%2=1);
+    datsplit := traintestsplit(datn_all,'filename',2);
+    // datn := datn_all(id%2=0);
+    // dath := datn_all(id%2=1);
+    datn := datsplit.trn;
+    dath := datsplit.tst;
 
     ff := sm.getFields(datn);
 

@@ -1,6 +1,6 @@
 IMPORT * FROM EDGAR_Extract.Text_Tools;
 IMPORT * FROM SEC_2_Vec.sentiment;
-IMPORT sectors from SEC_2_Vec.sentiment.tests;
+IMPORT sectors from SEC_2_Vec.sentiment;
 
 EXPORT traintestsplit(DATASET(sent_model.trainrec) d,STRING split_on = 'filename',INTEGER split_n = 2) := FUNCTION
 

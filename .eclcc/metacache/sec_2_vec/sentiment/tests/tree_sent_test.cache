@@ -5,6 +5,7 @@
  <Depend module="EDGAR_Extract" name="text_tools"/>
  <Depend module="LearningTrees" name="classificationforest"/>
  <Depend module="SEC_2_Vec.sentiment" name="sectors"/>
+ <Depend module="SEC_2_Vec.sentiment" name="traintestsplit"/>
  <Depend module="SEC_2_Vec.sentiment" name="docsent"/>
  <Depend module="LogisticRegression" name="binomiallogisticregression"/>
 </Attr>
