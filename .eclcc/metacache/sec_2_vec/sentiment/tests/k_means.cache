@@ -1,9 +1,9 @@
 <Cache hash="3275204131620305104">
-<Attr module="SEC_2_Vec.sentiment.tests" name="docsent_test">
+<Attr module="SEC_2_Vec.sentiment.tests" name="k_means">
  <Depend module="ML_Core" name="types"/>
  <Depend module="SEC_2_Vec.sentiment" name="sent_model"/>
- <Depend module="LogisticRegression" name="binomiallogisticregression"/>
+ <Depend module="KMeans" name="kmeans"/>
+ <Depend module="KMeans" name="types"/>
  <Depend module="ML_Core" name="analysis"/>
- <Depend module="SEC_2_Vec.sentiment" name="docsent"/>
 </Attr>
 </Cache>

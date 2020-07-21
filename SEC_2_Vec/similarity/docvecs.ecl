@@ -67,9 +67,6 @@ nameb := fnames[5];
 absim_vn := docsim(tdwl_vn(fname=namea),tdwl_vn(fname=nameb));
 //absim_tf := docsim(tdwl_tf(fname=namea),tdwl_tf(fname=nameb));
 
-qtrsimrec := RECORD
-    STRING 
-END;
 
 OUTPUT(tdwl_vn,ALL,NAMED('vanilla'));
 //OUTPUT(tdwl_tf,ALL,NAMED('tfidf'));

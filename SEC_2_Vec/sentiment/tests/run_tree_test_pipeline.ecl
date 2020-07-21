@@ -1,4 +1,4 @@
-IMPORT * FROM SEC_2_Vec.sentiment;
+IMPORT * FROM SEC_2_Vec.sentiment.tests;
 
 #OPTION('outputLimit',100);
 

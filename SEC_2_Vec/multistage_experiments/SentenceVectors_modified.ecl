@@ -7,7 +7,7 @@ IMPORT Std.Str;
 IMPORT Std.system.Thorlib;
 IMPORT int.svUtils AS Utils;
 IMPORT SEC_2_Vec;
-IMPORT * FROM SEC_2_Vec;
+IMPORT * FROM SEC_2_Vec.multistage_experiments;
 
 t_TextId := Types.t_TextId;
 t_Sentence := Types.t_Sentence;

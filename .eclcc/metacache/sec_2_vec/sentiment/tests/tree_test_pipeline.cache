@@ -1,0 +1,13 @@
+<Cache hash="3275204131620305104">
+<Attr module="SEC_2_Vec.sentiment.tests" name="tree_test_pipeline">
+ <Depend module="SEC_2_Vec.sentiment" name="sectors"/>
+ <Depend module="EDGAR_Extract" name="text_tools"/>
+ <Depend module="SEC_2_Vec.sentiment" name="sent_model"/>
+ <Depend module="ML_Core" name="types"/>
+ <Depend module="SEC_2_Vec.sentiment.tests" name="plainlblvn"/>
+ <Depend module="SEC_2_Vec.sentiment.tests" name="sandplblvn"/>
+ <Depend module="LearningTrees" name="classificationforest"/>
+ <Depend module="LogisticRegression" name="confusion"/>
+ <Depend module="LogisticRegression" name="binomialconfusion"/>
+</Attr>
+</Cache>

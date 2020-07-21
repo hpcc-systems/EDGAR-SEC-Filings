@@ -5,6 +5,7 @@ IMPORT * FROM tv;
 IMPORT tv.Types;
 IMPORT SEC_2_Vec;
 IMPORT * FROM SEC_2_Vec;
+IMPORT * FROM SEC_2_Vec.multistage_experiments;
 Sentence := Types.Sentence;
 t_Vector := Types.t_Vector;
 SliceExt := Types.SliceExt;
@@ -21,13 +22,13 @@ EXPORT Stage_Learn := MODULE
     END;
     trainSentences := TABLE(rawsents,rawrec);
 
-    sv := SEC_2_Vec.SentenceVectors_modified();
+    sv := SEC_2_Vec.multistage_experiments.SentenceVectors_modified();
 
     stage1weights := sv.GetModel_finalweights(trainSentences);
 
     RETURN stage1weights;
   END;
-  EXPORT FinalStage(STRING trainPath, STRING trainform, STRING corpPath) := FUNCTION
+  EXPORT FinalStage(STRING trainPath10q, STRING trainPath10k,STRING trainform, STRING corpPath) := FUNCTION
     
 
     ptext_extr(STRING tPath) := FUNCTION
@@ -48,14 +49,14 @@ EXPORT Stage_Learn := MODULE
       RETURN outsents;
     END;
 
-    rs(STRING tpath, STRING tform) := FUNCTION
+    rs(STRING tpathq,STRING tpathk='placeholder', STRING tform) := FUNCTION
       out := CASE(tform,
-           'SEC' => secvec_input(tpath),
-           'ptext' => ptext_extr(tpath));
+           'SEC' => PROJECT(secvec_input_lbl(tpathq,tpathk),TRANSFORM(Sentence,SELF.sentId := LEFT.sentId,SELF.text := LEFT.text)),
+           'ptext' => ptext_extr(tpathq));
       RETURN out;
     END;    
 
-    rawsents := rs(trainPath, trainform);
+    rawsents := rs(trainPath10q, trainPath10k,trainform);
 
     rawrec := RECORD
         UNSIGNED8 sentId := rawsents.sentId;

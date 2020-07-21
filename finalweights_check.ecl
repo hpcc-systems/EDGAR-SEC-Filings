@@ -1,5 +1,5 @@
 IMPORT SEC_2_Vec;
-IMPORT * FROM SEC_2_Vec;
+IMPORT * FROM SEC_2_Vec.multistage_experiments;
 
 path := '~ncf::edgarfilings::raw::tech10qs_group';
 

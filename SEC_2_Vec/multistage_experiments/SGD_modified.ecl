@@ -43,7 +43,7 @@ EXPORT SGD_modified(SET OF INTEGER4 shape, REAL trainToLoss=.05, UNSIGNED numEpo
                   UNSIGNED noProgressEpochs = 5) := MODULE
   SHARED COMPRESS_UPDATES := IF(nNodes > 1, TRUE, FALSE);
   SHARED w := int.Weights(shape);  // Module for managing weights.
-  SHARED wmod := SEC_2_Vec.Weights_modified(shape);
+  SHARED wmod := SEC_2_Vec.multistage_experiments.Weights_modified(shape);
   /**
     * Experimental. Factor by which to reduce the learning rate
     * for each epoch in which no forward progress on loss reduction

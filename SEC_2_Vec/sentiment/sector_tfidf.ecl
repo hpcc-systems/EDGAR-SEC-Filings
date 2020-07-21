@@ -4,7 +4,6 @@ IMPORT TextVectors as tv;
 IMPORT tv.Types;
 IMPORT SEC_2_Vec.sentiment;
 IMPORT * FROM sentiment;
-IMPORT sentiment.tests.sectors;
 IMPORT * FROM EDGAR_Extract.Text_Tools;
 
 srec := sentiment.sent_model.sveclblrec;

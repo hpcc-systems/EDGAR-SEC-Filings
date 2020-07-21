@@ -1,0 +1,7 @@
+<Cache hash="3275204131620305104">
+<Attr name="txt_extract_ficcorp">
+ <Depend module="EDGAR_Extract" name="text_tools"/>
+ <Depend module="TextVectors" name="sentencevectors"/>
+ <Depend module="TextVectors" name="types"/>
+</Attr>
+</Cache>

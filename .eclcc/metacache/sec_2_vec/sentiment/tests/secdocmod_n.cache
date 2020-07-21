@@ -2,10 +2,10 @@
 <Attr module="SEC_2_Vec.sentiment.tests" name="secdocmod_n">
  <Depend module="EDGAR_Extract" name="text_tools"/>
  <Depend module="SEC_2_Vec.sentiment" name="sent_model"/>
- <Depend module="SEC_2_Vec.sentiment.tests" name="sectors"/>
+ <Depend module="SEC_2_Vec.sentiment" name="sectors"/>
  <Depend module="LogisticRegression" name="binomiallogisticregression"/>
  <Depend module="LogisticRegression" name="binomialconfusion"/>
  <Depend module="ML_Core" name="analysis"/>
- <Depend module="SEC_2_Vec.sentiment.tests" name="docsent"/>
+ <Depend module="SEC_2_Vec.sentiment" name="docsent"/>
 </Attr>
 </Cache>

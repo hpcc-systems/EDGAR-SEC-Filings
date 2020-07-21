@@ -1,4 +1,4 @@
-IMPORT * FROM SEC_2_Vec.sentiment.tests;
+IMPORT * FROM SEC_2_Vec.sentiment;
 
 wurec := RECORD
     STRING wu;

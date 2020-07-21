@@ -6,7 +6,7 @@ IMPORT * FROM LT;
 IMPORT SEC_2_Vec;
 IMPORT SEC_2_Vec.sentiment.sent_model as sm;
 IMPORT * FROM EDGAR_Extract.Text_Tools;
-IMPORT sectors,docsent from SEC_2_Vec.sentiment.tests;
+IMPORT * from SEC_2_Vec.sentiment;
 
 #OPTION('outputLimit',500);
 

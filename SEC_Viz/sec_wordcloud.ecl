@@ -38,7 +38,7 @@ EXPORT sec_wordcloud := MODULE
   END;
     
   EXPORT show := FUNCTION
-    wcloud := Visualizer.TwoD.WordCloud('WordCloud',, 'Chart2D__test');
+    wcloud := Visualizer.Visualizer.TwoD.WordCloud('WordCloud',, 'Chart2D__test');
     RETURN wcloud;
   END;
 END;

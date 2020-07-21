@@ -1,7 +1,7 @@
 IMPORT ML_Core;
 IMPORT ML_Core.Types;
 IMPORT SEC_2_Vec;
-IMPORT SEC_2_Vec.sentiment.sent_model;
+IMPORT * FROM SEC_2_Vec.sentiment;
 
 #OPTION('outputLimit',100);
 
@@ -22,7 +22,7 @@ preds := plainblr.Classify(mod,X);
 acc := ML_Core.Analysis.Classification.Accuracy(preds,Y);
 
 
-dsent := SEC_2_Vec.sentiment.tests.docsent(preds,sp);
+dsent := docsent(preds,sp);
 
 docX := dsent.docavg;
 docY := dsent.labtru;

@@ -6,7 +6,7 @@ IMPORT TextVectors as tv;
 IMPORT LogisticRegression as LR;
 IMPORT LearningTrees AS LT;
 IMPORT * FROM LT;
-IMPORT sectors from SEC_2_Vec.sentiment.tests;
+IMPORT sectors from SEC_2_Vec.sentiment;
 IMPORT * FROM EDGAR_Extract.Text_Tools;
 
 trainrec := sent_model.trainrec;
