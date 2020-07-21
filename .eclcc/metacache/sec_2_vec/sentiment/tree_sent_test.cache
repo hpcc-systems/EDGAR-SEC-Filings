@@ -4,8 +4,8 @@
  <Depend module="SEC_2_Vec.sentiment" name="sent_model"/>
  <Depend module="EDGAR_Extract" name="text_tools"/>
  <Depend module="SEC_2_Vec.sentiment.tests" name="sectors"/>
+ <Depend module="SEC_2_Vec.sentiment.tests" name="docsent"/>
  <Depend module="LearningTrees" name="classificationforest"/>
- <Depend module="LogisticRegression" name="confusion"/>
- <Depend module="LogisticRegression" name="binomialconfusion"/>
+ <Depend module="LogisticRegression" name="binomiallogisticregression"/>
 </Attr>
 </Cache>

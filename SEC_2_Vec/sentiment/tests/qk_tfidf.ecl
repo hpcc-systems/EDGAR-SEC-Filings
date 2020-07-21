@@ -3,7 +3,7 @@ IMPORT * FROM SEC_2_Vec;
 IMPORT TextVectors as tv;
 IMPORT tv.Types;
 
-#OPTION('outputLimit',500);
+#OPTION('outputLimit',1500);
 //#OPTION('outputLimit',1750);
 //#OPTION('minimizeSpillSize',TRUE);
 
@@ -26,7 +26,7 @@ ssn := sentiment.sent_setup_norm(tsents,model);
 //tfidfnorm := ssn.tfidf_norm;
 //tfidfnorm := ssn.tfidf_norm;
 //twn := ssn.tf_withvecs_norm;
-tfidf := ssn.sembed_grp_experimental;
+//tfidf := ssn.sembed_grp_experimental;
 //svb := ssn.sent_vecs_byword_norm;
 // normrec := RECORDOF(tfidfnorm);
 //tfnormno0 := tfidfnorm(tfidf_score != 0);
@@ -34,6 +34,8 @@ tfidf := ssn.sembed_grp_experimental;
 //tfbigno0s := tfbigpart(tfidf_score != 0);
 // tfidf_allsort := SORT(tfidfnorm,sentId);
 // tfidf_sentgrp := GROUP(tfidf_allsort,sentId);
+
+wmod := ssn.wmod;
 
 // weirdrec := RECORD
 //     DATASET(normrec) non0rows;
@@ -54,7 +56,8 @@ tfidf := ssn.sembed_grp_experimental;
 //OUTPUT(tfnormno0,ALL,NAMED('tfnormno0'));
 //OUTPUT(COUNT(tfidfnorm));
 //OUTPUT(tfidfnorm);
-OUTPUT(tfidf);
+//OUTPUT(tfidf,ALL,NAMED('tfidf_all'));
 //OUTPUT(tfidf_no0s[..2]);
 //OUTPUT(svb);
 //OUTPUT(COUNT(twn[..10000]));
+OUTPUT(wmod,ALL);

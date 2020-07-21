@@ -7,8 +7,7 @@ IMPORT SEC_2_Vec.sentiment.sent_model;
 //from sentence classifications
 //It also returns the 'true' labels
 
-EXPORT docsent(DATASET(Types.DiscreteField) preds,
-                                                    DATASET(sent_model.trainrec) lbldata) := MODULE
+EXPORT docsent(DATASET(Types.DiscreteField) preds,DATASET(sent_model.trainrec) lbldata) := MODULE
 
     SHARED midrec := RECORD(Types.DiscreteField)
         STRING fname;
