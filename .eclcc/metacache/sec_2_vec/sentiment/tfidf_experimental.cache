@@ -1,0 +1,9 @@
+<Cache hash="8742968833293342473">
+<Attr module="SEC_2_Vec.sentiment" name="tfidf_experimental">
+ <Depend module="" name="types"/>
+ <Depend module="TextVectors" name="types"/>
+ <Depend module="TextVectors.Internal" name="corpus"/>
+ <Depend module="SEC_2_Vec.sentiment" name="sent_prep"/>
+ <Depend module="TextVectors.Internal" name="svutils"/>
+</Attr>
+</Cache>

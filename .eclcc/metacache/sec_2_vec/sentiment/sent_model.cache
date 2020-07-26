@@ -1,10 +1,12 @@
-<Cache hash="3275204131620305104">
+<Cache hash="8742968833293342473">
 <Attr module="SEC_2_Vec.sentiment" name="sent_model">
+ <Depend module="" name="types"/>
  <Depend module="TextVectors" name="types"/>
- <Depend module="ML_Core" name="types"/>
  <Depend module="TextVectors" name="sentencevectors"/>
- <Depend module="SEC_2_Vec.sentiment" name="sent_setup_norm"/>
+ <Depend module="SEC_2_Vec.sentiment" name="tfidf_experimental"/>
  <Depend module="ML_Core" name="tofield"/>
+ <Depend module="ML_Core" name="types"/>
+ <Depend module="LogisticRegression" name="types"/>
  <Depend module="LogisticRegression" name="binomiallogisticregression"/>
  <Depend module="LogisticRegression" name="constants"/>
 </Attr>

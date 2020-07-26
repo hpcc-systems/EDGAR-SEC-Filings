@@ -28,4 +28,10 @@ EXPORT sectors := MODULE
         out := SET(uniqs,uniqs.sector);
         RETURN out;
     END;
+
+    EXPORT ticksn(INTEGER n) := FUNCTION
+        secn := sectorlist[n];
+        ticksinsec := sectorticker(sector=secn);
+        RETURN SET(ticksinsec,ticksinsec.ticker);
+    END;
 END;

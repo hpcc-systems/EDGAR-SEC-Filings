@@ -1,0 +1,8 @@
+<Cache hash="-8415424772456026327">
+<Attr name="tensor">
+ <Depend module="ML_Core" name="types"/>
+ <Depend module="std.system" name="thorlib"/>
+ <Depend module="std.system" name="log"/>
+ <Depend name="python3"/>
+</Attr>
+</Cache>

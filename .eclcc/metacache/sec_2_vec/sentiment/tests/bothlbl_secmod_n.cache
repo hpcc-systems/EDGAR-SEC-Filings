@@ -1,0 +1,13 @@
+<Cache hash="8742968833293342473">
+<Attr module="SEC_2_Vec.sentiment.tests" name="bothlbl_secmod_n">
+ <Depend module="EDGAR_Extract" name="text_tools"/>
+ <Depend module="TextVectors" name="types"/>
+ <Depend module="" name="types"/>
+ <Depend module="SEC_2_Vec.sentiment" name="sectors"/>
+ <Depend module="SEC_2_Vec.sentiment" name="traintestsplit"/>
+ <Depend module="SEC_2_Vec.sentiment" name="sent_model"/>
+ <Depend module="LogisticRegression" name="binomiallogisticregression"/>
+ <Depend module="ML_Core" name="analysis"/>
+ <Depend module="SEC_2_Vec.sentiment" name="docsent"/>
+</Attr>
+</Cache>

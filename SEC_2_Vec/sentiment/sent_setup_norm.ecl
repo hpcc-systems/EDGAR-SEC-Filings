@@ -97,6 +97,12 @@ EXPORT sent_setup_norm(DATASET(Types.Sentence) tsents,DATASET(Types.TextMod) big
     t_Vector w_Vector;
   END;
 
+  EXPORT optrec2 := RECORD
+    UNSIGNED8 sentId;
+    STRING text;
+    t_Vector w_Vector;
+  END;
+
   //Multiplying vectors by a real number
   EXPORT t_Vector vecmult(t_Vector v,REAL8 x) := BEGINC++
     #body
@@ -121,18 +127,32 @@ EXPORT sent_setup_norm(DATASET(Types.Sentence) tsents,DATASET(Types.TextMod) big
     //on whichever approach you are trying
     //for the final step; if wrec just
     //uncomment word,tfidf_score
-    optrec tfscoreno0withvec_T(normrec nr) := TRANSFORM
-    //wrec tfscoreno0withvec_T(normrec nr) := TRANSFORM
+    //optrec tfscoreno0withvec_T(normrec nr) := TRANSFORM
+    wrec tfscoreno0withvec_T(normrec nr) := TRANSFORM
       tscore := sp.tfidf(STD.Str.ToLowerCase(nr.word),nr.text);
       int_ts0 := TRUNCATE(tscore/tfidf_score_cutoff);
-      //SELF.word := IF(int_ts0=0,SKIP,nr.word);
+      SELF.word := IF(int_ts0=0,SKIP,nr.word);
       SELF.sentId := IF(int_ts0=0,SKIP,nr.sentId);
       SELF.text := IF(int_ts0=0,SKIP,nr.text);
-      //SELF.tfidf_score := IF(int_ts0=0,SKIP,tscore);
+      SELF.tfidf_score := IF(int_ts0=0,SKIP,tscore);
       SELF.w_Vector := IF(int_ts0=0,[SKIP],vecmult(wmod(STD.Str.ToLowerCase(text)=STD.Str.ToLowerCase(nr.word))[1].vec,tscore));
     END;
 
     out_norm := PROJECT(nds,tfscoreno0withvec_T(LEFT));
+
+    RETURN out_norm;
+  END;
+
+  EXPORT tfidf_norm_exp := FUNCTION
+    optrec2 tfscoreno0(normrec nr) := TRANSFORM
+      tscore := sp.tfidf(STD.Str.ToLowerCase(nr.word),nr.text);
+      int_ts0 := TRUNCATE(tscore/tfidf_score_cutoff);
+      SELF.sentId := IF(int_ts0=0,SKIP,nr.sentId);
+      SELF.text := IF(int_ts0=0,SKIP,nr.word);
+      SELF.w_Vector := IF(int_ts0=0,[SKIP],vecmult(wmod(STD.Str.ToLowerCase(text)=STD.Str.ToLowerCase(nr.word))[1].vec,tscore));
+    END;
+
+    out_norm := PROJECT(normed_ds,tfscoreno0(LEFT));
 
     RETURN out_norm;
   END;
@@ -159,30 +179,30 @@ EXPORT sent_setup_norm(DATASET(Types.Sentence) tsents,DATASET(Types.TextMod) big
     svb_cpy := tfidf_norm;
 
     //This is the first approach: group rollup with local iterate
-    // svb_ordered := SORT(svb_cpy,svb_cpy.sentId);
-    // svb_grp := GROUP(svb_ordered,sentId);
+    svb_ordered := SORT(svb_cpy,svb_cpy.sentId);
+    svb_grp := GROUP(svb_ordered,sentId);
 
-    // wrec iter_vecs(wrec l,wrec r,INTEGER C) := TRANSFORM
-    //   SELF.w_Vector := IF(C=1,r.w_Vector,addvecs(l.w_Vector,r.w_Vector));
-    //   SELF := r;
-    // END;
+    wrec iter_vecs(wrec l,wrec r,INTEGER C) := TRANSFORM
+      SELF.w_Vector := IF(C=1,r.w_Vector,addvecs(l.w_Vector,r.w_Vector));
+      SELF := r;
+    END;
 
-    // t_Vector get_tot_vec(DATASET(wrec) r) := FUNCTION
-    //   itvecs := ITERATE(r,iter_vecs(LEFT,RIGHT,COUNTER),LOCAL);
-    //   L_iter := COUNT(itvecs);
-    //   totvec := itvecs[L_iter].w_Vector;
-    //   RETURN tv.Internal.svUtils.normalizeVector(totvec);
-    // END;
+    t_Vector get_tot_vec(DATASET(wrec) r) := FUNCTION
+      itvecs := ITERATE(r,iter_vecs(LEFT,RIGHT,COUNTER),LOCAL);
+      L_iter := COUNT(itvecs);
+      totvec := itvecs[L_iter].w_Vector;
+      RETURN tv.Internal.svUtils.normalizeVector(totvec);
+    END;
 
-    // wrec grproll(wrec L,DATASET(wrec) R) := TRANSFORM
-    //   SELF.word := L.word;
-    //   SELF.sentId := L.sentId;
-    //   SELF.text := L.text;
-    //   SELF.tfidf_score := L.tfidf_score;
-    //   SELF.w_Vector := get_tot_vec(R);
-    // END;
+    wrec grproll(wrec L,DATASET(wrec) R) := TRANSFORM
+      SELF.word := L.word;
+      SELF.sentId := L.sentId;
+      SELF.text := L.text;
+      SELF.tfidf_score := L.tfidf_score;
+      SELF.w_Vector := get_tot_vec(R);
+    END;
 
-    // out := ROLLUP(svb_grp,GROUP,grproll(LEFT,ROWS(LEFT)));
+    out := ROLLUP(svb_grp,GROUP,grproll(LEFT,ROWS(LEFT)));
 
     //This is the second approach: project with local iterate
     // wrec exp_proj_T(INTEGER C) := TRANSFORM
@@ -233,22 +253,22 @@ EXPORT sent_setup_norm(DATASET(Types.Sentence) tsents,DATASET(Types.TextMod) big
 
     //This is the sixth approach. Follows the distributed
     //approach in TextVectors.SentenceVectors.sent2vector
-    svbsortD := SORT(DISTRIBUTE(svb_cpy,sentId),sentId,LOCAL);
-    optrec roll_T(optrec lw,optrec rw) := TRANSFORM
-      SELF.w_Vector := lw.w_Vector + rw.w_Vector;
-      SELF.sentId := lw.sentId;
-      SELF.text := '';
-    END;
+    // svbsortD := SORT(DISTRIBUTE(svb_cpy,sentId),sentId,LOCAL);
+    // optrec roll_T(optrec lw,optrec rw) := TRANSFORM
+    //   SELF.w_Vector := lw.w_Vector + rw.w_Vector;
+    //   SELF.sentId := lw.sentId;
+    //   SELF.text := '';
+    // END;
 
-    rollout := ROLLUP(svbsortD,roll_T(LEFT,RIGHT),sentId,LOCAL);
+    // rollout := ROLLUP(svbsortD,roll_T(LEFT,RIGHT),sentId,LOCAL);
 
-    sentD := DISTRIBUTE(spsent,sentId);
+    // sentD := DISTRIBUTE(spsent,sentId);
 
-    out := JOIN(rollout,sentD,LEFT.sentId = RIGHT.sentId,
-                  TRANSFORM(optrec,
-                  SELF.w_Vector := tv.Internal.svUtils.calcSentVector(LEFT.w_Vector,veclen),
-                  SELF.text := RIGHT.text,
-                  SELF := LEFT),LOCAL);
+    // out := JOIN(rollout,sentD,LEFT.sentId = RIGHT.sentId,
+    //               TRANSFORM(optrec,
+    //               SELF.w_Vector := tv.Internal.svUtils.calcSentVector(LEFT.w_Vector,veclen),
+    //               SELF.text := RIGHT.text,
+    //               SELF := LEFT),LOCAL);
 
     RETURN out;
   END;
@@ -296,5 +316,108 @@ EXPORT sent_setup_norm(DATASET(Types.Sentence) tsents,DATASET(Types.TextMod) big
 
     RETURN out;
 
+  END;
+
+  //This is the eighth approach. In order to better distribute the problem,
+  //and avoid the initial sort on sentId, we will mdoify the algorithm to
+  //take in nested records rather than regular records. We therefore need a
+  //nested record type
+  SHARED nestrec := RECORD
+    DATASET(wrec) nestrow;
+  END;
+
+  SHARED nestrec2 := RECORD
+    DATASET(optrec) nestrow;
+  END;
+
+  EXPORT nest_tfidf := FUNCTION
+
+    nestform := PROJECT(tfidf_norm,TRANSFORM(nestrec,SELF.nestrow := ROW(LEFT,TRANSFORM(wrec,SELF := LEFT))));
+
+    wrec iter_vecs(wrec l,wrec r,INTEGER C) := TRANSFORM
+      SELF.w_Vector := IF(C=1,r.w_Vector,addvecs(l.w_Vector,r.w_Vector));
+      SELF := r;
+    END;
+
+    t_Vector get_tot_vec(DATASET(wrec) r) := FUNCTION
+      itvecs := ITERATE(r,iter_vecs(LEFT,RIGHT,COUNTER),LOCAL);
+      L_iter := COUNT(itvecs);
+      totvec := itvecs[L_iter].w_Vector;
+      RETURN tv.Internal.svUtils.normalizeVector(totvec);
+    END;
+
+    nestf(nestrec nl,nestrec nr) := FUNCTION
+      both := nl.nestrow + nr.nestrow;
+      //bothsrt := SORT(DISTRIBUTE(both,sentId),sentId,LOCAL);
+      //bothgrp := GROUP(bothsrt,sentId);
+      //out := ROLLUP(bothgrp,GROUP,TRANSFORM(wrec,SELF.w_Vector := get_tot_vec(ROWS(LEFT)),
+                                                //SELF := LEFT));
+      //out := AGGREGATE(both,wrec,TRANSFORM(wrec,SELF.w_Vector := addvecs(LEFT.w_Vector,RIGHT.w_Vector),SELF := LEFT),
+                                //TRANSFORM(wrec,SELF.w_Vector := addvecs(RIGHT1.w_Vector,RIGHT2.w_Vector),SELF := RIGHT1));
+      //out := ROLLUP(bothsrt,TRANSFORM(wrec,SELF.w_Vector := LEFT.w_VectorRIGHT.w_Vector),SELF := LEFT),sentId,LOCAL);
+      out := AGGREGATE(both,wrec,TRANSFORM(wrec,SELF.w_Vector := LEFT.w_Vector+RIGHT.w_Vector,SELF := LEFT),both.sentId,LOCAL);                                        
+      RETURN out;
+    END;
+
+    // nestrec allroll_T(nestrec nl,nestrec nr) := TRANSFORM
+    //   both := nl.nestrow+nr.nestrow;
+    //   //bothgrp := GROUP(SORT(DISTRIBUTE(both,sentId),sentId,LOCAL),sentId);
+    //   //bothrll := ROLLUP(bothgrp,GROUP,TRANSFORM(wrec,
+    //                                       //SELF.w_Vector := get_tot_vec(ROWS(LEFT)),
+    //                                       //SELF := LEFT));
+    //   //SELF.nestrow := bothrll;
+    //   //SELF.nestrow := AGGREGATE(both,wrec,TRANSFORM(wrec,SELF.w_Vector := addvecs(LEFT.w_Vector,RIGHT.w_Vector),SELF := LEFT),LEFT.sentId,LOCAL);
+    // END;
+
+    //out := ROLLUP(nestform[..2000],TRUE,allroll_T(LEFT,RIGHT),LOCAL)[1];
+    pre := AGGREGATE(nestform[..1000],nestrec,TRANSFORM(nestrec,SELF.nestrow := nestf(LEFT,RIGHT)),
+                                              TRANSFORM(nestrec,SELF.nestrow := nestf(RIGHT1,RIGHT2)))[1].nestrow;
+
+    out := PROJECT(pre,TRANSFORM(wrec,SELF.w_Vector := tv.Internal.svUtils.calcSentVector(LEFT.w_Vector,100),SELF := LEFT));
+
+    RETURN out;
+    //RETURN nestform;
+  END;
+
+
+  //this is the ninth approach. Similar to the eighth approach but instead of performing sorts each time the pairs of records are
+  //combined, we start by turning each normalized row into a set of all sentences that is 'empty' or contins 0 vectors except
+  //on the sentId for the corresponding row of the normalized dataset. This seems like it blows up our already huge memory even
+  //larger, but hopefully the lack of sorting will provide a performance improvement.
+  EXPORT nest_tfall := FUNCTION
+
+    DATASET(optrec) emptyrowset(wrec tfrow) := FUNCTION
+      empty := PROJECT(spsent,TRANSFORM(optrec,SELF.w_Vector:=IF(LEFT.sentId=tfrow.sentId,tfrow.w_Vector,vecmult(tfrow.w_Vector,0.0)),SELF := LEFT));
+      RETURN empty;
+    END;
+
+    DATASET(optrec) addrowsets(DATASET(optrec) lr,DATASET(optrec) rr) := FUNCTION
+      out := PROJECT(lr,TRANSFORM(optrec,SELF.w_Vector := addvecs(LEFT.w_Vector,rr(sentId=LEFT.sentId)[1].w_Vector),SELF := LEFT));
+      RETURN out;
+    END;
+
+    empties := PROJECT(tfidf_norm,TRANSFORM(nestrec2,SELF.nestrow := emptyrowset(LEFT)));
+
+    //out := AGGREGATE(empties,nestrec2,TRANSFORM(nestrec2,SELF.nestrow := addrowsets(LEFT.nestrow,RIGHT.nestrow)),TRANSFORM(nestrec2,SELF.nestrow := addrowsets(RIGHT1.nestrow,RIGHT2.nestrow)))[1];
+    RETURN empties;
+  END;
+
+  EXPORT calctfidfvector := FUNCTION
+    sentWords := SORT(DISTRIBUTE(tfidf_norm_exp,sentId),sentId,LOCAL);
+    optrec2 doRollup(optrec2 lr,optrec2 rr) := TRANSFORM
+      SELF.w_Vector := lr.w_Vector + rr.w_Vector;
+      SELF.sentId := lr.sentId;
+      SELF.text := '';
+    END;
+
+    sentOut0 := ROLLUP(sentWords,doRollup(LEFT,RIGHT),sentId,LOCAL);
+
+    sentD := DISTRIBUTE(spsent,sentId);
+    
+    sentOut := JOIN(sentOut0,sentD,LEFT.sentId = RIGHT.sentId, TRANSFORM(RECORDOF(LEFT),
+                                                                          SELF.w_Vector := tv.Internal.svUtils.calcSentVector(LEFT.w_Vector,vecLen),
+                                                                          SELF.text := RIGHT.text,
+                                                                          SELF := RIGHT), LOCAL);
+    RETURN sentOut;
   END;
 END;

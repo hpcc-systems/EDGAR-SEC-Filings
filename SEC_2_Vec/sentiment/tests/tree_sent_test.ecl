@@ -133,38 +133,38 @@ make_cfs(INTEGER n) := FUNCTION
     docY4 := dsent4.labtru;
     docY4h := dsent4h.labtru;
 
-    // mod1doc1 := CF1.GetModel(docX1,docY1);
-    // mod2doc2 := CF2.GetModel(docX2,docY2);
-    // mod3doc3 := CF3.GetModel(docX3,docY3);
-    // mod4doc4 := CF4.GetModel(docX4,docY4);
+    mod1doc1 := CF1.GetModel(docX1,docY1);
+    mod2doc2 := CF2.GetModel(docX2,docY2);
+    mod3doc3 := CF3.GetModel(docX3,docY3);
+    mod4doc4 := CF4.GetModel(docX4,docY4);
 
-    // dpreds1 := CF1.Classify(mod1doc1,docX1);
-    // dpreds1h := CF1.Classify(mod1doc1,docX1h);
-    // dpreds2 := CF2.Classify(mod2doc2,docX2);
-    // dpreds2h := CF2.Classify(mod2doc2,docX2h);
-    // dpreds3 := CF3.Classify(mod3doc3,docX3);
-    // dpreds3h := CF3.Classify(mod3doc3,docX3h);
-    // dpreds4 := CF4.Classify(mod4doc4,docX4);
-    // dpreds4h := CF4.Classify(mod4doc4,docX4h);
+    dpreds1 := CF1.Classify(mod1doc1,docX1);
+    dpreds1h := CF1.Classify(mod1doc1,docX1h);
+    dpreds2 := CF2.Classify(mod2doc2,docX2);
+    dpreds2h := CF2.Classify(mod2doc2,docX2h);
+    dpreds3 := CF3.Classify(mod3doc3,docX3);
+    dpreds3h := CF3.Classify(mod3doc3,docX3h);
+    dpreds4 := CF4.Classify(mod4doc4,docX4);
+    dpreds4h := CF4.Classify(mod4doc4,docX4h);
 
     //doing the document prediction with BLR after
     //doing sentence prediction using CF
-    IMPORT LogisticRegression as LR;
-    plainblr := LR.BinomialLogisticRegression();
+    // IMPORT LogisticRegression as LR;
+    // plainblr := LR.BinomialLogisticRegression();
 
-    doc1mod := plainblr.GetModel(docX1,docY1);
-    doc2mod := plainblr.GetModel(docX2,docY2);
-    doc3mod := plainblr.GetModel(docX3,docY3);
-    doc4mod := plainblr.GetModel(docX4,docY4);
+    // doc1mod := plainblr.GetModel(docX1,docY1);
+    // doc2mod := plainblr.GetModel(docX2,docY2);
+    // doc3mod := plainblr.GetModel(docX3,docY3);
+    // doc4mod := plainblr.GetModel(docX4,docY4);
 
-    dpreds1 := plainblr.Classify(doc1mod,docX1);
-    dpreds1h := plainblr.Classify(doc1mod,docX1h);
-    dpreds2 := plainblr.Classify(doc2mod,docX2);
-    dpreds2h := plainblr.Classify(doc2mod,docX2h);
-    dpreds3 := plainblr.Classify(doc3mod,docX3);
-    dpreds3h := plainblr.Classify(doc3mod,docX3h);
-    dpreds4 := plainblr.Classify(doc4mod,docX4);
-    dpreds4h := plainblr.Classify(doc4mod,docX4h);
+    // dpreds1 := plainblr.Classify(doc1mod,docX1);
+    // dpreds1h := plainblr.Classify(doc1mod,docX1h);
+    // dpreds2 := plainblr.Classify(doc2mod,docX2);
+    // dpreds2h := plainblr.Classify(doc2mod,docX2h);
+    // dpreds3 := plainblr.Classify(doc3mod,docX3);
+    // dpreds3h := plainblr.Classify(doc3mod,docX3h);
+    // dpreds4 := plainblr.Classify(doc4mod,docX4);
+    // dpreds4h := plainblr.Classify(doc4mod,docX4h);
 
 
     docpod1 := ML_Core.Analysis.Classification.Accuracy(dpreds1,docY1);

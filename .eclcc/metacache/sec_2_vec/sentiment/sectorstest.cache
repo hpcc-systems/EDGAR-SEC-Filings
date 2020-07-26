@@ -1,0 +1,5 @@
+<Cache hash="8742968833293342473">
+<Attr module="SEC_2_Vec.sentiment" name="sectorstest">
+ <Depend module="SEC_2_Vec.sentiment" name="sectors"/>
+</Attr>
+</Cache>

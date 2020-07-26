@@ -1,19 +1,22 @@
 IMPORT ML_Core;
-IMPORT ML_Core.Types;
 IMPORT SEC_2_Vec.sentiment.sent_model;
+IMPORT * FROM Types;
 
 //This function outputs a NumericField
 //for predicting overall doc sentiment
 //from sentence classifications
 //It also returns the 'true' labels
 
-EXPORT docsent(DATASET(Types.DiscreteField) preds,DATASET(sent_model.trainrec) lbldata) := MODULE
+nf := ML_Core.Types.NumericField;
+df := ML_Core.Types.DiscreteField;
 
-    SHARED midrec := RECORD(Types.DiscreteField)
+EXPORT docsent(DATASET(df) preds,DATASET(trainrec) lbldata) := MODULE
+
+    SHARED midrec := RECORD(df)
         STRING fname;
     END;
     
-    midrec att_fnames_T(Types.DiscreteField p) := TRANSFORM
+    midrec att_fnames_T(df p) := TRANSFORM
         SELF.fname := lbldata(id=p.id)[1].fname;
         SELF := p;
     END;
@@ -23,8 +26,8 @@ EXPORT docsent(DATASET(Types.DiscreteField) preds,DATASET(sent_model.trainrec) l
     sortnames := SORT(withnames,fname);
     SHARED groupname := GROUP(sortnames,fname);
 
-    EXPORT DATASET(Types.NumericField) docavg := FUNCTION
-        Types.NumericField rollout_T(midrec l,DATASET(midrec) ls) := TRANSFORM
+    EXPORT DATASET(nf) docavg := FUNCTION
+        nf rollout_T(midrec l,DATASET(midrec) ls) := TRANSFORM
             SELF.value := AVE(ls,ls.value);
             SELF.id := MIN(SORT(ls,id),ls.id);
             SELF := l;
@@ -34,8 +37,8 @@ EXPORT docsent(DATASET(Types.DiscreteField) preds,DATASET(sent_model.trainrec) l
         RETURN out_nums;
     END;
     
-    EXPORT DATASET(Types.DiscreteField) labtru := FUNCTION
-        Types.DiscreteField rolllab_T(midrec l,DATASET(midrec) ls) := TRANSFORM
+    EXPORT DATASET(df) labtru := FUNCTION
+        df rolllab_T(midrec l,DATASET(midrec) ls) := TRANSFORM
             SELF.wi := 1;
             SELF.id := MIN(SORT(ls,id),ls.id);
             SELF.number := 1;

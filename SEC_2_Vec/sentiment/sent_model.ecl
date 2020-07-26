@@ -1,33 +1,16 @@
+IMPORT Types as secTypes;
+IMPORT * FROM secTypes;
+IMPORT ML_Core;
 IMPORT * FROM SEC_2_Vec;
 IMPORT SEC_2_Vec.sentiment as s;
 IMPORT * FROM s;
 IMPORT TextVectors as tv;
-IMPORT tv.Types AS Types;
-IMPORT * FROM Types;
-IMPORT * FROM ML_Core;
-IMPORT ML_Core.Types as mlTypes;
-IMPORT ML_Core.Interfaces;
 IMPORT * FROM LogisticRegression;
 
 Sentence := tv.Types.Sentence;
 TextMod := tv.Types.TextMod;
 
 EXPORT sent_model := MODULE
-
-    EXPORT trainrec := RECORD
-        tv.Types.t_TextId id;
-        tv.Types.t_Sentence text;
-        tv.Types.t_Vector vec;
-        STRING label;
-        STRING fname;
-    END;
-
-    EXPORT sveclblrec := RECORD
-        UNSIGNED8 sentId;
-        STRING text;
-        STRING label;
-        STRING fname;
-    END;
 
     EXPORT trn10q10klbl_van(DATASET(sveclblrec) rawsents) := FUNCTION
         rawrec := RECORD
@@ -44,6 +27,7 @@ EXPORT sent_model := MODULE
         trainSentences := TABLE(rawsents,rawrec);
         labelSentences := TABLE(rawsents,outlblrec);
 
+        //sv := tv.SentenceVectors(100,.05,0,0,10,.1,.0001,10,3);
         sv := tv.SentenceVectors();
         model := sv.GetModel(trainSentences);
         vanstart := model(typ=2);
@@ -95,7 +79,7 @@ EXPORT sent_model := MODULE
         sv := tv.SentenceVectors();
         model := sv.GetModel(trainSentences);
         //ssn := sent_setup_norm(path);
-        ssn := sent_setup_norm(trainSentences,model);
+        //ssn := sent_setup_norm(trainSentences,model);
         vanstart := model(typ=2);
         vanrec := RECORD
             UNSIGNED8 sentId := vanstart.id;
@@ -103,13 +87,14 @@ EXPORT sent_model := MODULE
             tv.Types.t_Vector vec := vanstart.vec;
         END;
         vands := TABLE(vanstart,vanrec);
-        tfidfstart := ssn.sembed_grp_experimental;
-        tfhelprec := RECORD
-            UNSIGNED8 sentId := tfidfstart.sentId;
-            STRING text := tfidfstart.text;
-            tv.Types.t_Vector vec := tfidfstart.w_Vector;
-        END;
-        tfds := TABLE(tfidfstart,tfhelprec);
+        //tfidfstart := ssn.sembed_grp_experimental;
+        // tfhelprec := RECORD
+        //     UNSIGNED8 sentId := tfidfstart.sentId;
+        //     STRING text := tfidfstart.text;
+        //     tv.Types.t_Vector vec := tfidfstart.w_Vector;
+        // END;
+        // tfds := TABLE(tfidfstart,tfhelprec);
+        //tfds_tr := tfidf_experimental(model(typ=1),trainSentences,100,1);
         //sentmod := IF(approach='vanilla',vands,tfds);
 
         smodrec := RECORD
@@ -128,7 +113,7 @@ EXPORT sent_model := MODULE
 
         //out := PROJECT(sentmod,lrT(LEFT,labelSentences));
         vanout := PROJECT(vands,lrT(LEFT,labelSentences));
-        tfout  := PROJECT(tfds,lrT(LEFT,labelSentences));
+        tfout  := tfidf_experimental(model(typ=1),rawsents,100,1);//PROJECT(tfds,lrT(LEFT,labelSentences));
 
         //RETURN out;
         RETURN [vanout,tfout];
@@ -333,10 +318,10 @@ EXPORT sent_model := MODULE
 
         input_tonumfield := TABLE(input_tofield,numericrec);
 
-        //ML_Core.ToField(input_tofield,X);
+        //ToField(input_tofield,X);
         ML_Core.ToField(input_tonumfield,X);
 
-        Y := PROJECT(input_tofield,TRANSFORM(ML_Core.Types.DiscreteField,SELF.wi := 1,SELF.value := LEFT.label,SELF.id := LEFT.id,SELF.number := 1));
+        Y := PROJECT(input_tofield,TRANSFORM(Types.DiscreteField,SELF.wi := 1,SELF.value := LEFT.label,SELF.id := LEFT.id,SELF.number := 1));
         
         result := MODULE
             EXPORT NUMF := X;
@@ -358,7 +343,7 @@ EXPORT sent_model := MODULE
 
         output_tofield := PROJECT(tr,lblintT(LEFT,COUNTER));
 
-        Y := PROJECT(output_tofield,TRANSFORM(ML_Core.Types.DiscreteField,SELF.wi := 1,SELF.value := LEFT.label,SELF.id := LEFT.rowid,SELF.number := 1));
+        Y := PROJECT(output_tofield,TRANSFORM(Types.DiscreteField,SELF.wi := 1,SELF.value := LEFT.label,SELF.id := LEFT.rowid,SELF.number := 1));
 
         RETURN Y;
     END;

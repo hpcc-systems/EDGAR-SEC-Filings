@@ -26,9 +26,6 @@ EXPORT sector_tfidf(DATASET(srec) dat,DATASET(Types.TextMod) bigmod) := MODULE
 
         tsents := PROJECT(secdat,makesents_T(LEFT));
 
-        ssn := sent_setup_norm(tsents,bigmod);
-
-        RETURN ssn.sembed_grp_experimental;
-        //RETURN ssn.matrixtfidf;
+        RETURN tfidf_experimental(bigmod(typ=1),tsents,100,1);
     END;
 END;

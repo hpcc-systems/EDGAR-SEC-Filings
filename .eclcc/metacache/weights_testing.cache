@@ -1,4 +1,4 @@
-<Cache hash="3275204131620305104">
+<Cache hash="6442366839921406013">
 <Attr name="weights_testing">
  <Depend module="TextVectors" name="types"/>
  <Depend module="std.system" name="thorlib"/>

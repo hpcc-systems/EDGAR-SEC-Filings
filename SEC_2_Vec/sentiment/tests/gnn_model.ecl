@@ -1,8 +1,8 @@
 IMPORT PYTHON3 AS Python;
 IMPORT * FROM Python;
-IMPORT * FROM GNN;
 IMPORT * FROM SEC_2_Vec.sentiment;
 IMPORT ML_Core.Types;
+IMPORT * FROM GNN;
 nf := Types.NumericField;
 df := Types.DiscreteField;
 t_tens := Tensor.R4.t_Tensor;

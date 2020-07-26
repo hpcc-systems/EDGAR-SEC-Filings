@@ -4,14 +4,16 @@ IMPORT * FROM SEC_2_Vec.sentiment;
 
 //#OPTION('outputLimit',1000);
 
-EXPORT sandplblvn := FUNCTION
-    path10k := '~ncf::edgarfilings::raw::labels_allsecs_all_10k';
-    path10q := '~ncf::edgarfilings::raw::plainlabel_allsecs_all';
+#OPTION('outputLimit',1000);
 
-    splblsents := SORT(secvec_input_lbl(path10q,path10k,TRUE,'s&p'),fname);
+//EXPORT sandplblvn := FUNCTION
+path10k := '~ncf::edgarfilings::raw::labels_allsecs_all_10k';
+path10q := '~ncf::edgarfilings::raw::plainlabel_allsecs_all';
 
-    sandplblvn := sent_model.trn10q10klbl_van(splblsents);
+splblsents := SORT(secvec_input_lbl(path10q,path10k,TRUE,'s&p'),fname);
 
-    //OUTPUT(sandplblvn,ALL,NAMED('sandp_label_vanilla_data'));
-    RETURN sandplblvn;
-END;
+sandplblvn := sent_model.trn10q10klbl_van(splblsents);
+
+OUTPUT(sandplblvn,ALL,NAMED('sandp_label_vanilla_data'));
+    //RETURN sandplblvn;
+//END;

@@ -1,8 +1,9 @@
 IMPORT * FROM EDGAR_Extract.Text_Tools;
 IMPORT * FROM SEC_2_Vec.sentiment;
 IMPORT sectors from SEC_2_Vec.sentiment;
+IMPORT * FROM Types;
 
-EXPORT traintestsplit(DATASET(sent_model.trainrec) d,STRING split_on = 'filename',INTEGER split_n = 2) := FUNCTION
+EXPORT traintestsplit(DATASET(trainrec) d,STRING split_on = 'filename',INTEGER split_n = 2) := FUNCTION
 
     //we could perform our train test split on
     //'sentId', 'filename', or 'ticker'. For now we
@@ -21,7 +22,7 @@ EXPORT traintestsplit(DATASET(sent_model.trainrec) d,STRING split_on = 'filename
     tickrec := RECORD
         STRING ticker;
     END;
-    tickrec tick_T(sent_model.trainrec tr) := TRANSFORM
+    tickrec tick_T(trainrec tr) := TRANSFORM
         SELF.ticker := get_tick(tr.fname);
     END;
     ticks := SET(DEDUP(PROJECT(dedup_d,tick_T(LEFT)),ticker),ticker);
