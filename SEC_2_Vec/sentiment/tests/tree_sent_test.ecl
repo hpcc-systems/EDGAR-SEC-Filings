@@ -4,56 +4,51 @@ IMPORT LogisticRegression as LR;
 IMPORT LearningTrees AS LT;
 IMPORT * FROM LT;
 IMPORT SEC_2_Vec;
+IMPORT * FROM SEC_2_Vec;
 IMPORT SEC_2_Vec.sentiment.sent_model as sm;
 IMPORT * FROM EDGAR_Extract.Text_Tools;
 IMPORT * from SEC_2_Vec.sentiment;
+IMPORT * FROM Types;
 
 #OPTION('outputLimit',500);
 
-vansents := DATASET(WORKUNIT('W20200713-063347','sandp_label_vanilla_data'),sm.trainrec);
+vansents := DATASET(WORKUNIT('W20200726-092906','plain_vanilla'),trainrec);
+tfsents := DATASET(WORKUNIT('W20200726-092906','plain_tfidf'),trainrec);
 
 outrec := RECORD
     STRING sector;
-    REAL8 acc100;
-    REAL8 acc50;
-    REAL8 acc25;
-    REAL8 acc10;
-    REAL8 pod_100;
-    REAL8 pode_100;
-    REAL8 hpod_100;
-    REAL8 hpode_100;
-    REAL8 pod_50;
-    REAL8 pode_50;
-    REAL8 hpod_50;
-    REAL8 hpode_50;
-    REAL8 pod_25;
-    REAL8 pode_25;
-    REAL8 hpod_25;
-    REAL8 hpode_25;
-    REAL8 pod_10;
-    REAL8 pode_10;
-    REAL8 hpod_10;
-    REAL8 hpode_10;
-    REAL8 doc_acc100;
-    REAL8 doc_acc50;
-    REAL8 doc_acc25;
-    REAL8 doc_acc10;
-    REAL8 doc_pod_100;
-    REAL8 doc_pode_100;
-    REAL8 doc_hpod_100;
-    REAL8 doc_hpode_100;
-    REAL8 doc_pod_50;
-    REAL8 doc_pode_50;
-    REAL8 doc_hpod_50;
-    REAL8 doc_hpode_50;
-    REAL8 doc_pod_25;
-    REAL8 doc_pode_25;
-    REAL8 doc_hpod_25;
-    REAL8 doc_hpode_25;
-    REAL8 doc_pod_10;
-    REAL8 doc_pode_10;
-    REAL8 doc_hpod_10;
-    REAL8 doc_hpode_10;
+    REAL8 vn_pod_100;
+    REAL8 vn_pode_100;
+    REAL8 tf_pod_100;
+    REAL8 tf_pode_100;
+    REAL8 vn_pod_50;
+    REAL8 vn_pode_50;
+    REAL8 tf_pod_50;
+    REAL8 tf_pode_50;
+    REAL8 vn_pod_25;
+    REAL8 vn_pode_25;
+    REAL8 tf_pod_25;
+    REAL8 tf_pode_25;
+    REAL8 vn_pod_10;
+    REAL8 vn_pode_10;
+    REAL8 tf_pod_10;
+    REAL8 tf_pode_10;
+    REAL8 docvn_pod_100;
+    REAL8 docvn_pode_100;
+    REAL8 doctf_pod_100;
+    REAL8 doctf_pode_100;
+    REAL8 docvn_pod_50;
+    REAL8 docvn_pode_50;
+    REAL8 doctf_pod_50;
+    REAL8 doctf_pode_50;
+    REAL8 docvn_pod_25;
+    REAL8 docvn_pode_25;
+    REAL8 doctf_pod_25;
+    REAL8 doctf_pode_25;
+    REAL8 docvn_pod_10;
+    REAL8 docvn_pode_10;
+    REAL8 doctf_pod_10;
+    REAL8 doctf_pode_10;    
 END;
 
 CF1 := LT.ClassificationForest();
@@ -66,86 +61,141 @@ secs := sectors.sectorlist;
 make_cfs(INTEGER n) := FUNCTION
 
     sect := secs[n];
-    datn_all := vansents(get_tick(fname) IN SET(sectors.sectorticker(sector=sect),ticker));
-    datsplit := traintestsplit(datn_all,'filename',2);
-    // datn := datn_all(id%2=0);
-    // dath := datn_all(id%2=1);
-    datn := datsplit.trn;
-    dath := datsplit.tst;
 
-    ff := sm.getFields(datn);
+    datvn_all := vansents(get_tick(fname) IN sectors.ticksn(n));
+    datvnsplit := traintestsplit(datvn_all,'filename',2);
+    datvn := datvnsplit.trn;
+    datvnh := datvnsplit.tst;
 
-    X := ff.NUMF;
-    Y := ff.DSCF;
+    dattf_all := tfsents(get_tick(fname) IN sectors.ticksn(n));
+    dattfsplit := traintestsplit(dattf_all,'filename',2);
+    dattf := dattfsplit.trn;
+    dattfh := dattfsplit.tst;
 
-    ff_h := sm.getFields(dath);
+    vanff := sm.getFields(datvn);
+    tfff := sm.getFields(dattf);
 
-    Xh := ff_h.NUMF;
-    Yh := ff_h.DSCF;
+    Xvn := vanff.NUMF;
+    Yvn := vanff.DSCF;
+    Xtf := tfff.NUMF;
+    Ytf := tfff.DSCF;
 
-    mod1 := CF1.GetModel(X,Y);
-    mod2 := CF2.GetModel(X,Y);
-    mod3 := CF3.GetModel(X,Y);
-    mod4 := CF4.GetModel(X,Y);
+    vanff_h := sm.getFields(datvnh);
+    tfff_h := sm.getFields(dattfh);
 
-    preds1 := CF1.Classify(mod1,X);
-    preds1h := CF1.Classify(mod1,Xh);
-    preds2 := CF2.Classify(mod2,X);
-    preds2h := CF2.Classify(mod2,Xh);
-    preds3 := CF3.Classify(mod3,X);
-    preds3h := CF3.Classify(mod3,Xh);
-    preds4 := CF4.Classify(mod4,X);
-    preds4h := CF4.Classify(mod4,Xh);
+    Xvnh := vanff_h.NUMF;
+    Yvnh := vanff_h.DSCF;
+    Xtfh := tfff_h.NUMF;
+    Ytfh := tfff_h.DSCF;
 
-    pod1 := ml_ac.Accuracy(preds1,Y);
-    pod1h := ml_ac.Accuracy(preds1h,Yh);
-    pod2 := ml_ac.Accuracy(preds2,Y);
-    pod2h := ml_ac.Accuracy(preds2h,Yh);
-    pod3 := ml_ac.Accuracy(preds3,Y);
-    pod3h := ml_ac.Accuracy(preds3h,Yh);
-    pod4 := ml_ac.Accuracy(preds4,Y);
-    pod4h := ml_ac.Accuracy(preds4h,Yh);
+    mod1vn := CF1.GetModel(Xvn,Yvn);
+    mod1tf := CF1.GetModel(Xtf,Ytf);
+    mod2vn := CF2.GetModel(Xvn,Yvn);
+    mod2tf := CF2.GetModel(Xtf,Ytf);
+    mod3vn := CF3.GetModel(Xvn,Yvn);
+    mod3tf := CF3.GetModel(Xtf,Ytf);
+    mod4vn := CF4.GetModel(Xvn,Yvn);
+    mod4tf := CF4.GetModel(Xtf,Ytf);
 
-    dsent1 := docsent(preds1,datn);
-    dsent1h := docsent(preds1h,dath);
-    dsent2 := docsent(preds2,datn);
-    dsent2h := docsent(preds2h,dath);
-    dsent3 := docsent(preds3,datn);
-    dsent3h := docsent(preds3h,dath);
-    dsent4 := docsent(preds4,datn);
-    dsent4h := docsent(preds4h,dath);
+    preds1vn := CF1.Classify(mod1vn,Xvn);
+    preds1vnh := CF1.Classify(mod1vn,Xvnh);
+    preds1tf := CF1.Classify(mod1tf,Xtf);
+    preds1tfh := CF1.Classify(mod1tf,Xtfh);
+    preds2vn := CF2.Classify(mod2vn,Xvn);
+    preds2vnh := CF2.Classify(mod2vn,Xvnh);
+    preds2tf := CF2.Classify(mod2tf,Xtf);
+    preds2tfh := CF2.Classify(mod2tf,Xtfh);
+    preds3vn := CF3.Classify(mod3vn,Xvn);
+    preds3vnh := CF3.Classify(mod3vn,Xvnh);
+    preds3tf := CF3.Classify(mod3tf,Xtf);
+    preds3tfh := CF3.Classify(mod3tf,Xtfh);
+    preds4vn := CF4.Classify(mod4vn,Xvn);
+    preds4vnh := CF4.Classify(mod4vn,Xvnh);
+    preds4tf := CF4.Classify(mod4tf,Xtf);
+    preds4tfh := CF4.Classify(mod4tf,Xtfh);
 
-    docX1 := dsent1.docavg;
-    docX1h := dsent1h.docavg;
-    docX2 := dsent2.docavg;
-    docX2h := dsent2h.docavg;
-    docX3 := dsent3.docavg;
-    docX3h := dsent3h.docavg;
-    docX4 := dsent4.docavg;
-    docX4h := dsent4h.docavg;
+    //pod1 := ml_ac.Accuracy(preds1,Y);
+    pod1vnh := ml_ac.Accuracy(preds1vnh,Yvnh);
+    pod1tfh := ml_ac.Accuracy(preds1tfh,Ytfh);
+    //pod2 := ml_ac.Accuracy(preds2,Y);
+    pod2vnh := ml_ac.Accuracy(preds2vnh,Yvnh);
+    pod2tfh := ml_ac.Accuracy(preds2tfh,Ytfh);
+    //pod3 := ml_ac.Accuracy(preds3,Y);
+    pod3vnh := ml_ac.Accuracy(preds3vnh,Yvnh);
+    pod3tfh := ml_ac.Accuracy(preds3tfh,Ytfh);
+    //pod4 := ml_ac.Accuracy(preds4,Y);
+    pod4vnh := ml_ac.Accuracy(preds4vnh,Yvnh);
+    pod4tfh := ml_ac.Accuracy(preds4tfh,Ytfh);
 
-    docY1 := dsent1.labtru;
-    docY1h := dsent1h.labtru;
-    docY2 := dsent2.labtru;
-    docY2h := dsent2h.labtru;
-    docY3 := dsent3.labtru;
-    docY3h := dsent3h.labtru;
-    docY4 := dsent4.labtru;
-    docY4h := dsent4h.labtru;
+    dsent1vn := docsent(preds1vn,datvn);
+    dsent1vnh := docsent(preds1vnh,datvnh);
+    dsent1tf := docsent(preds1tf,dattf);
+    dsent1tfh := docsent(preds1tfh,dattfh);
+    dsent2vn := docsent(preds2vn,datvn);
+    dsent2vnh := docsent(preds2vnh,datvnh);
+    dsent2tf := docsent(preds2tf,dattf);
+    dsent2tfh := docsent(preds2tfh,dattfh);
+    dsent3vn := docsent(preds3vn,datvn);
+    dsent3vnh := docsent(preds3vnh,datvnh);
+    dsent3tf := docsent(preds3tf,dattf);
+    dsent3tfh := docsent(preds3tfh,dattfh);
+    dsent4vn := docsent(preds4vn,datvn);
+    dsent4vnh := docsent(preds4vnh,datvnh);
+    dsent4tf := docsent(preds4tf,dattf);
+    dsent4tfh := docsent(preds4tfh,dattfh);
 
-    mod1doc1 := CF1.GetModel(docX1,docY1);
-    mod2doc2 := CF2.GetModel(docX2,docY2);
-    mod3doc3 := CF3.GetModel(docX3,docY3);
-    mod4doc4 := CF4.GetModel(docX4,docY4);
+    docX1vn := dsent1vn.docavg;
+    docX1vnh := dsent1vnh.docavg;
+    docX1tf := dsent1tf.docavg;
+    docX1tfh := dsent1tfh.docavg;
+    docX2vn := dsent2vn.docavg;
+    docX2vnh := dsent2vnh.docavg;
+    docX2tf := dsent2tf.docavg;
+    docX2tfh := dsent2tfh.docavg;
+    docX3vn := dsent3vn.docavg;
+    docX3vnh := dsent3vnh.docavg;
+    docX3tf := dsent3tf.docavg;
+    docX3tfh := dsent3tfh.docavg;
+    docX4vn := dsent4vn.docavg;
+    docX4vnh := dsent4vnh.docavg;
+    docX4tf := dsent4tf.docavg;
+    docX4tfh := dsent4tfh.docavg;
 
-    dpreds1 := CF1.Classify(mod1doc1,docX1);
-    dpreds1h := CF1.Classify(mod1doc1,docX1h);
-    dpreds2 := CF2.Classify(mod2doc2,docX2);
-    dpreds2h := CF2.Classify(mod2doc2,docX2h);
-    dpreds3 := CF3.Classify(mod3doc3,docX3);
-    dpreds3h := CF3.Classify(mod3doc3,docX3h);
-    dpreds4 := CF4.Classify(mod4doc4,docX4);
-    dpreds4h := CF4.Classify(mod4doc4,docX4h);
+    docY1vn := dsent1vn.labtru;
+    docY1vnh := dsent1vnh.labtru;
+    docY1tf := dsent1tf.labtru;
+    docY1tfh := dsent1tfh.labtru;
+    docY2vn := dsent2vn.labtru;
+    docY2vnh := dsent2vnh.labtru;
+    docY2tf := dsent2tf.labtru;
+    docY2tfh := dsent2tfh.labtru;
+    docY3vn := dsent3vn.labtru;
+    docY3vnh := dsent3vnh.labtru;
+    docY3tf := dsent3tf.labtru;
+    docY3tfh := dsent3tfh.labtru;
+    docY4vn := dsent4vn.labtru;
+    docY4vnh := dsent4vnh.labtru;
+    docY4tf := dsent4tf.labtru;
+    docY4tfh := dsent4tfh.labtru;
+
+    dmod1vn := CF1.GetModel(docX1vn,docY1vn);
+    dmod1tf := CF1.GetModel(docX1tf,docY1tf);
+    dmod2vn := CF2.GetModel(docX2vn,docY2vn);
+    dmod2tf := CF2.GetModel(docX2tf,docY2tf);
+    dmod3vn := CF3.GetModel(docX3vn,docY3vn);
+    dmod3tf := CF3.GetModel(docX3tf,docY3tf);
+    dmod4vn := CF4.GetModel(docX4vn,docY4vn);
+    dmod4tf := CF4.GetModel(docX4tf,docY4tf);
+
+    //dpreds1 := CF1.Classify(mod1doc1,docX1);
+    dpreds1vnh := CF1.Classify(dmod1vn,docX1vnh);
+    dpreds1tfh := CF1.Classify(dmod1tf,docX1tfh);
+    dpreds2vnh := CF2.Classify(dmod2vn,docX2vnh);
+    dpreds2tfh := CF2.Classify(dmod2tf,docX2tfh);
+    dpreds3vnh := CF3.Classify(dmod3vn,docX3vnh);
+    dpreds3tfh := CF3.Classify(dmod3tf,docX3tfh);
+    dpreds4vnh := CF4.Classify(dmod4vn,docX4vnh);
+    dpreds4tfh := CF4.Classify(dmod4tf,docX4tfh);
 
     //doing the document prediction with BLR after
     //doing sentence prediction using CF
@@ -167,110 +217,62 @@ make_cfs(INTEGER n) := FUNCTION
     // dpreds4h := plainblr.Classify(doc4mod,docX4h);
 
 
-    docpod1 := ML_Core.Analysis.Classification.Accuracy(dpreds1,docY1);
-    docpod1h := ML_Core.Analysis.Classification.Accuracy(dpreds1h,docY1h);
-    docpod2 := ML_Core.Analysis.Classification.Accuracy(dpreds2,docY2);
-    docpod2h := ML_Core.Analysis.Classification.Accuracy(dpreds2h,docY2h);
-    docpod3 := ML_Core.Analysis.Classification.Accuracy(dpreds3,docY3);
-    docpod3h := ML_Core.Analysis.Classification.Accuracy(dpreds3h,docY3h);
-    docpod4 := ML_Core.Analysis.Classification.Accuracy(dpreds4,docY4);
-    docpod4h := ML_Core.Analysis.Classification.Accuracy(dpreds4h,docY4h);
+    docpod1vnh := ml_ac.Accuracy(dpreds1vnh,docY1vnh);
+    docpod1tfh := ml_ac.Accuracy(dpreds1tfh,docY1tfh);
+    docpod2vnh := ml_ac.Accuracy(dpreds2vnh,docY2vnh);
+    docpod2tfh := ml_ac.Accuracy(dpreds2tfh,docY2tfh);
+    docpod3vnh := ml_ac.Accuracy(dpreds3vnh,docY3vnh);
+    docpod3tfh := ml_ac.Accuracy(dpreds3tfh,docY3tfh);
+    docpod4vnh := ml_ac.Accuracy(dpreds4vnh,docY4vnh);
+    docpod4tfh := ml_ac.Accuracy(dpreds4tfh,docY4tfh);
 
     result := MODULE
         EXPORT sec := sect;
-        EXPORT acc1 := pod1[1].raw_accuracy;
-        EXPORT acc2 := pod2[1].raw_accuracy;
-        EXPORT acc3 := pod3[1].raw_accuracy;
-        EXPORT acc4 := pod4[1].raw_accuracy;
-        EXPORT p1 := pod1[1].pod;
-        EXPORT pe1 := pod1[1].pode;
-        EXPORT hp1 := pod1h[1].pod;
-        EXPORT hpe1 := pod1h[1].pode;
-        EXPORT p2 := pod2[1].pod;
-        EXPORT pe2 := pod2[1].pode;
-        EXPORT hp2 := pod2h[1].pod;
-        EXPORT hpe2 := pod2h[1].pode;
-        EXPORT p3 := pod3[1].pod;
-        EXPORT pe3 := pod3[1].pode;
-        EXPORT hp3 := pod3h[1].pod;
-        EXPORT hpe3 := pod3h[1].pode;
-        EXPORT p4 := pod4[1].pod;
-        EXPORT pe4 := pod4[1].pode;
-        EXPORT hp4 := pod4h[1].pod;
-        EXPORT hpe4 := pod4h[1].pode;
-        EXPORT dacc1 := docpod1[1].raw_accuracy;
-        EXPORT dacc2 := docpod2[1].raw_accuracy;
-        EXPORT dacc3 := docpod3[1].raw_accuracy;
-        EXPORT dacc4 := docpod4[1].raw_accuracy;
-        EXPORT dp1 := docpod1[1].pod;
-        EXPORT dpe1 := docpod1[1].pode;
-        EXPORT dhp1 := docpod1h[1].pod;
-        EXPORT dhpe1 := docpod1h[1].pode;
-        EXPORT dp2 := docpod2[1].pod;
-        EXPORT dpe2 := docpod2[1].pode;
-        EXPORT dhp2 := docpod2h[1].pod;
-        EXPORT dhpe2 := docpod2h[1].pode;
-        EXPORT dp3 := docpod3[1].pod;
-        EXPORT dpe3 := docpod3[1].pode;
-        EXPORT dhp3 := docpod3h[1].pod;
-        EXPORT dhpe3 := docpod3h[1].pode;
-        EXPORT dp4 := docpod4[1].pod;
-        EXPORT dpe4 := docpod4[1].pode;
-        EXPORT dhp4 := docpod4h[1].pod;
-        EXPORT dhpe4 := docpod4h[1].pode;
+        EXPORT p1v_pod := pod1vnh[1].pod;
+        EXPORT p1v_pode := pod1vnh[1].pode;
+        EXPORT p1t_pod := pod1tfh[1].pod;
+        EXPORT p1t_pode := pod1tfh[1].pode;
+        EXPORT p2v_pod := pod2vnh[1].pod;
+        EXPORT p2v_pode := pod2vnh[1].pode;
+        EXPORT p2t_pod := pod2tfh[1].pod;
+        EXPORT p2t_pode := pod2tfh[1].pode;
+        EXPORT p3v_pod := pod3vnh[1].pod;
+        EXPORT p3v_pode := pod3vnh[1].pode;
+        EXPORT p3t_pod := pod3tfh[1].pod;
+        EXPORT p3t_pode := pod3tfh[1].pode;
+        EXPORT p4v_pod := pod4vnh[1].pod;
+        EXPORT p4v_pode := pod4vnh[1].pode;
+        EXPORT p4t_pod := pod4tfh[1].pod;
+        EXPORT p4t_pode := pod4tfh[1].pode;
+        EXPORT dp1v_pod := docpod1vnh[1].pod;
+        EXPORT dp1v_pode := docpod1vnh[1].pode;
+        EXPORT dp1t_pod := docpod1tfh[1].pod;
+        EXPORT dp1t_pode := docpod1tfh[1].pode;
+        EXPORT dp2v_pod := docpod2vnh[1].pod;
+        EXPORT dp2v_pode := docpod2vnh[1].pode;
+        EXPORT dp2t_pod := docpod2tfh[1].pod;
+        EXPORT dp2t_pode := docpod2tfh[1].pode;
+        EXPORT dp3v_pod := docpod3vnh[1].pod;
+        EXPORT dp3v_pode := docpod3vnh[1].pode;
+        EXPORT dp3t_pod := docpod3tfh[1].pod;
+        EXPORT dp3t_pode := docpod3tfh[1].pode;
+        EXPORT dp4v_pod := docpod4vnh[1].pod;
+        EXPORT dp4v_pode := docpod4vnh[1].pode;
+        EXPORT dp4t_pod := docpod4tfh[1].pod;
+        EXPORT dp4t_pode := docpod4tfh[1].pode;        
     END;
 
-    RETURN DATASET([{result.sec,result.acc1,result.acc2,result.acc3,result.acc4,
-                    result.p1,result.pe1,result.hp1,result.hpe1,
-                    result.p2,result.pe2,result.hp2,result.hpe2,
-                    result.p3,result.pe3,result.hp3,result.hpe3,
-                    result.p4,result.pe4,result.hp4,result.hpe4,
-                    result.dacc1,result.dacc2,result.dacc3,result.dacc4,
-                    result.dp1,result.dpe1,result.dhp1,result.dhpe1,
-                    result.dp2,result.dpe2,result.dhp2,result.dhpe2,
-                    result.dp3,result.dpe3,result.dhp3,result.dhpe3,
-                    result.dp4,result.dpe4,result.dhp4,result.dhpe4}],outrec);
+    RETURN DATASET([{result.sec,
+    result.p1v_pod,result.p1v_pode,result.p1t_pod,result.p1t_pode,
+    result.p2v_pod,result.p2v_pode,result.p2t_pod,result.p2t_pode,
+    result.p3v_pod,result.p3v_pode,result.p3t_pod,result.p3t_pode,
+    result.p4v_pod,result.p4v_pode,result.p4t_pod,result.p4t_pode,
+    result.dp1v_pod,result.dp1v_pode,result.dp1t_pod,result.dp1t_pode,
+    result.dp2v_pod,result.dp2v_pode,result.dp2t_pod,result.dp2t_pode,
+    result.dp3v_pod,result.dp3v_pode,result.dp3t_pod,result.dp3t_pode,
+    result.dp4v_pod,result.dp4v_pode,result.dp4t_pod,result.dp4t_pode}],outrec);
 
 END;
-
-// rslt := make_cfs(1);
-// OUTPUT(rslt.sec);
-// OUTPUT(rslt.acc1);
-// OUTPUT(rslt.acc2);
-// OUTPUT(rslt.acc3);
-// OUTPUT(rslt.acc4);
-// OUTPUT(rslt.p1);
-// OUTPUT(rslt.p2);
-// OUTPUT(rslt.p3);
-// OUTPUT(rslt.p4);
-//OUTPUT(svc.Report(svm_mod,X,Y),NAMED('SVC_Report_All'));
-//OUTPUT(svm_con,NAMED('svm_model_confusion'));
-
-//OUTPUT(DATASET(COUNT(secs),TRANSFORM({STRING sector},SELF.sector := secs[COUNTER])));
-
-// prec := DATASET(ML_Core.Types.Classification_Accuracy);
-
-
-// outrec out_T(INTEGER C) := TRANSFORM
-//     rslt := make_cfs(C);
-//     SELF.sector := rslt.sec;
-//     SELF.acc100 := rslt.acc1;
-//     SELF.acc50 := rslt.acc2;
-//     SELF.acc25 := rslt.acc3;
-//     SELF.acc10 := rslt.acc4;
-//     SELF.pod_100 := rslt.p1[1].pod;
-//     SELF.pode_100 := rslt.p1[1].pode;
-//     SELF.pod_50 := rslt.p2[1].pod;
-//     SELF.pode_50 := rslt.p2[1].pode;
-//     SELF.pod_25 := rslt.p3[1].pod;
-//     SELF.pode_25 := rslt.p3[1].pode;
-//     SELF.pod_10 := rslt.p4[1].pod;
-//     SELF.pode_10 := rslt.p4[1].pode;
-// END;
-
-//out := DATASET(COUNT(secs),out_T(COUNTER));
-
-//OUTPUT(out);
 
 rslt1 := make_cfs(1);
 rslt2 := make_cfs(2);
@@ -299,39 +301,5 @@ rs := DATASET([rslt1[1],
         rslt11[1],
         rslt12[1],
         rslt13[1]],outrec);
-
-
-// outrec make_outrow(INTEGER C) := TRANSFORM
-//     SELF := rs[C][1];
-    // SELF.sector := rslt[1].sector;
-    // SELF.acc100 := rslt[1].acc100;
-    // SELF.acc50 := rslt[1].acc50;
-    // SELF.acc25 := rslt[1].acc;
-    // SELF.acc10 := rslt[1].acc4;
-    // SELF.pod_100 := rslt[1].p1;
-    // SELF.pode_100 := rslt[1].pe1;
-    // SELF.pod_50 := rslt[1].p2;
-    // SELF.pode_50 := rslt[1].pe2;
-    // SELF.pod_25 := rslt[1].p3;
-    // SELF.pode_25 := rslt[1].pe3;
-    // SELF.pod_10 := rslt[1].p4;
-    // SELF.pode_10 := rslt[1].pe4;
-//END;
-
-//out := DATASET(COUNT(rs),make_outrow(COUNTER));
-
-// OUTPUT(rslt1);
-// OUTPUT(rslt2);
-// OUTPUT(rslt3);
-// OUTPUT(rslt4);
-// OUTPUT(rslt5);
-// OUTPUT(rslt6);
-// OUTPUT(rslt7);
-// OUTPUT(rslt8);
-// OUTPUT(rslt9);
-// OUTPUT(rslt10);
-// OUTPUT(rslt11);
-// OUTPUT(rslt12);
-// OUTPUT(rslt13);
 
 OUTPUT(rs);

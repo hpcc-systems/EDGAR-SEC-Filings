@@ -1,4 +1,4 @@
-<Cache hash="8742968833293342473">
+<Cache hash="6442366839921406013">
 <Attr module="SEC_2_Vec.similarity" name="qoq_secmod_n">
  <Depend module="" name="types"/>
  <Depend module="EDGAR_Extract" name="text_tools"/>

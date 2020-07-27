@@ -3,19 +3,14 @@ IMPORT * FROM EDGAR_Extract;
 IMPORT * FROM EDGAR_Extract.Text_Tools;
 mainrec := EDGAR_Extract.Extract_Layout_modified.Main;
 
-
-//EXPORT secvec_input_lbl(STRING inpath,BOOLEAN prelabeled=TRUE,STRING comparedto='plain') := FUNCTION
 EXPORT secvec_input_lbl(STRING inpath10q,STRING inpath10k,BOOLEAN prelabeled=TRUE,STRING comparedto='plain') := FUNCTION
-    //start := XBRL_HTML_File(inpath);
+
     start10q := XBRL_HTML_File(inpath10q);
     start10k := XBRL_HTML_File(inpath10k);
 
     strec := RECORDOF(start10q);
     
     compjoin(DATASET(strec) stq,DATASET(strec) stk) := FUNCTION
-      //path := '~ncf::edgarfilings::supp::labelguide_sp_medium::labelguide.csv';
-      //path := '~ncf::edgarfilings::raw::labels_allsecs_all';
-      //path := '~ncf::edgarfilings::supp::labelguide_full';
       path10q := '~ncf::edgarfilings::supp::sp_labels_all';
       path10k := '~ncf::edgarfilings::supp::labelguide_all_10k';
 
@@ -23,17 +18,10 @@ EXPORT secvec_input_lbl(STRING inpath10q,STRING inpath10k,BOOLEAN prelabeled=TRU
         STRING plainname;
         STRING spname;
       END;
+      
       draw10q := DATASET(path10q,csvrec,CSV(HEADING(1)));
       draw10k := DATASET(path10k,csvrec,CSV(HEADING(1)));
-      // RECORDOF(start) j_T(RECORDOF(start) st,RECORDOF(ds) d) := TRANSFORM
-      //   SELF.filename := d.spname;
-      //   SELF.accessionNumber := st.accessionNumber;
-      //   SELF.filingDate := st.filingDate;
-      //   SELF.pubfloat := st.pubfloat;
-      //   SELF.wellknown := st.wellknown;
-      //   SELF.volfilers := st.volfilers;
-      //   SELF.values := st.values;
-      // END;
+
       cj10q := JOIN(stq,draw10q,LEFT.filename = RIGHT.plainname,TRANSFORM(RECORDOF(stq),SELF.filename:=RIGHT.spname,SELF:=LEFT));
       cj10k := JOIN(stk,draw10k,LEFT.filename = RIGHT.plainname,TRANSFORM(RECORDOF(stk),SELF.filename:=RIGHT.spname,SELF:=LEFT));
       

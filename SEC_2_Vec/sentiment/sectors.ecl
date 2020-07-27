@@ -1,5 +1,16 @@
 IMPORT * FROM EDGAR_Extract.Text_Tools;
 
+//contains utilities for filtering by
+//sector or listing the sectors in
+//the dataset.
+//
+//INITIALIZED DATASETS:
+// sectorticker (a dataset of
+// all unique sector-ticker pairs)
+// sectorlist (a set of all sectors)
+// ticksn() (a set of tickers in
+// the given sector)
+
 EXPORT sectors := MODULE
     EXPORT secrec := RECORD
         STRING sector;

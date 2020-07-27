@@ -1,8 +1,8 @@
-<Cache hash="6442366839921406013">
+<Cache hash="8742968833293342473">
 <Attr module="SEC_2_Vec.similarity.tests" name="simsents_test">
  <Depend module="TextVectors.Internal" name="svutils"/>
  <Depend module="" name="types"/>
  <Depend module="TextVectors" name="types"/>
- <Depend module="std" name="str"/>
+ <Depend module="SEC_2_Vec.similarity" name="simlabs"/>
 </Attr>
 </Cache>

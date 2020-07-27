@@ -6,6 +6,20 @@ IMPORT * FROM Types;
 //for predicting overall doc sentiment
 //from sentence classifications
 //It also returns the 'true' labels
+//
+//PARAMETERS:
+// preds (a DiscreteField dataset of the
+// predicted sentence classifications)
+// lbldata (a trainrec dataset of the
+// sentence vectors being predicted on)
+//
+//INITIALIZED DATASETS:
+// docavg (a NumericField dataset of
+// averaged predictions from preds,
+// one value per document)
+// labtru (a DiscreteField dataset of
+// the expected 'true' labels for
+// each document)
 
 nf := ML_Core.Types.NumericField;
 df := ML_Core.Types.DiscreteField;

@@ -1,0 +1,7 @@
+<Cache hash="8742968833293342473">
+<Attr module="_versions.ML_Core.V3_2_2.ML_Core.Interfaces" name="iclassify2">
+ <Depend module="" name="ml_core"/>
+ <Depend module="_versions.ML_Core.V3_2_2.ML_Core" name="types"/>
+ <Depend module="_versions.ML_Core.V3_2_2.ML_Core" name="analysis"/>
+</Attr>
+</Cache>

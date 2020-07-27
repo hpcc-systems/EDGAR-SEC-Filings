@@ -9,7 +9,7 @@ IMPORT ML_Core;
 IMPORT ML_Core.Types as mlTypes;
 
 
-EXPORT qoq_secmod_n(STRING veclbltype = 'pl_vn',INTEGER n) := FUNCTION//,STRING spliton='ticker') := FUNCTION
+EXPORT qoq_secmod_n(STRING veclbltype = 'pl_vn',INTEGER n,STRING method='add') := FUNCTION
     pl_vn := DATASET(WORKUNIT('W20200726-092906','plain_vanilla'),trainrec);
     pl_tf := DATASET(WORKUNIT('W20200726-092906','plain_tfidf'),trainrec);
     secn := sectors.sectorlist[n];
@@ -20,14 +20,14 @@ EXPORT qoq_secmod_n(STRING veclbltype = 'pl_vn',INTEGER n) := FUNCTION//,STRING 
     dat_secn := dat.trn;
     dat_h := dat.tst;
 
-    sl_secn := simlabs(dat_secn,'add');
-    sl_h := simlabs(dat_h,'add');
+    sl_secn := simlabs(dat_secn,method);
+    sl_h := simlabs(dat_h,method);
 
-    sal_secn := sl_secn.sim_and_labels;
-    sal_h := sl_h.sim_and_labels;
+    sal_secn := sl_secn.sim_and_labels(similarity!=-1.0);
+    sal_h := sl_h.sim_and_labels(similarity!=-1.0);
 
-    ff_secn := sl_secn.getFields;
-    ff_h := sl_h.getFields;
+    ff_secn := sl_secn.getFields(sal_secn);
+    ff_h := sl_h.getFields(sal_h);
 
     Xtrn := ff_secn.x;
     Ytrn := ff_secn.y;

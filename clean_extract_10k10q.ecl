@@ -11,11 +11,6 @@ path10q := '~ncf::edgarfilings::raw::plainlabel_allsecs_all';
 docs10k := Text_tools.XBRL_HTML_File(path10k);
 docs10q := Text_tools.XBRL_HTML_File(path10q);
 
-get_tick(STRING f) := FUNCTION
-    parts := STD.Str.SplitWords(TRIM(f,ALL),'_',FALSE);
-    RETURN parts[1];
-END;
-
 tickrec := RECORD
     STRING ticker;
 END;

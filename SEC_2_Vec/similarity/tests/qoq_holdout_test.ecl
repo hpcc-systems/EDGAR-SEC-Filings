@@ -19,10 +19,10 @@ outrec := RECORD
 END;
 
 outrec get_info(INTEGER n) := FUNCTION
-    pl_vn := qoq_secmod_n('pl_vn',n);
-    pl_tf := qoq_secmod_n('pl_tf',n);
-    sp_vn := qoq_secmod_n('sp_vn',n);
-    sp_tf := qoq_secmod_n('sp_tf',n);
+    pl_vn := qoq_secmod_n('pl_vn',n,'multiply');
+    pl_tf := qoq_secmod_n('pl_tf',n,'multiply');
+    sp_vn := qoq_secmod_n('sp_vn',n,'multiply');
+    sp_tf := qoq_secmod_n('sp_tf',n,'multiply');
     sec := sectors.sectorlist[n];
     pdpv := pl_vn.p;
     pepv := pl_vn.pe;

@@ -2,8 +2,12 @@ IMPORT STD;
 IMPORT * FROM SEC_2_Vec;
 IMPORT * FROM SEC_2_Vec.sentiment;
 IMPORT TextVectors as tv;
-IMPORT tv.Types;
-t_Vector := Types.t_Vector;
+IMPORT * FROM Types;
+IMPORT * FROM Internal.svUtils;
+
+t_Vector := tv.Types.t_Vector;
+Sentence := tv.Types.Sentence;
+TextMod := tv.Types.TextMod;
 
 
 //the sentiment setup module.
@@ -23,17 +27,17 @@ t_Vector := Types.t_Vector;
 // wmod (word vectors from input model after removing some problem tokens)
 // words (lex subset down to just the field 'word')
 // docus (spsent formally assigned record sentrec)
+// normed_ds (a normalized dataset of word-sentence pairs, including the sentence id nos.)
 // tfidf_norm (sets up a normalized ds with all word-sentence combos, the appropriate tfidf_score, and the appropriate word vector multiplied by that tfidf_score)
+// tfidf_norm_exp (sets up a normalized ds with all word-sentId combos, as well as the product of the appropriate tfidf score and word vector)
 // sembed_grp_experimental (contains a number of approaches to totaling the vectors in tfidf_norm)
 // matrixtfidf (approaches the totaling procedure in sembed_grp_experimental by dealing with each vector entry separately, no performance improvements)
-//
-//INITIALIZED RECORD TYPES:
-// sentrec (used to format spsent -> docus) same format as numbered training sentences
-// normrec (the record format of the normalized dataset before tfidf_score calculation or attaching vectors)
-// wrec (used to extend tfrec to contain w_Vector for calculating weighted vectors)
-// optrec (used in an experimental final step to add up vectors without bringing along text data; text is reattached later)
+// nest_tfidf (calculates the tfidf vectors by treating each row in the normalized dataset as a nested record, and then acts on any two datasets)
+// nest_tfall (calculates the same as nest_tfidf, with nested records, but starts by turning each row into a full set of the sentence vectors with 0 vectors everywhere
+// but where that given row is defined)
+// calctfidfvector (uses a similar syntax as calcsentvector from TextVectors to try to convert tfidf_norm into tfidf sentence vectors)
 
-EXPORT sent_setup_norm(DATASET(Types.Sentence) tsents,DATASET(Types.TextMod) bigmod,REAL8 tfidf_score_cutoff = 10.0) := MODULE
+EXPORT sent_setup_norm(DATASET(Sentence) tsents,DATASET(TextMod) bigmod,REAL8 tfidf_score_cutoff = 10.0) := MODULE
   
   EXPORT sp := sent_prep(tsents);
   EXPORT lex    := sp.dLexicon;
@@ -59,7 +63,7 @@ EXPORT sent_setup_norm(DATASET(Types.Sentence) tsents,DATASET(Types.TextMod) big
   EXPORT wmod := PARSE(wordmod,text,numcat,losenums_T(LEFT),WHOLE);
   SHARED veclen := COUNT(wmod[1].vec);
 
-  EXPORT sentrec := RECORD
+  SHARED sentrec := RECORD
       UNSIGNED8 sentId := spsent.sentId;
       STRING      text := spsent.text;
   END;
@@ -68,66 +72,18 @@ EXPORT sent_setup_norm(DATASET(Types.Sentence) tsents,DATASET(Types.TextMod) big
   EXPORT docus  := TABLE(sp.sentences,sentrec);
 
   //CREATING NORMALIZED word-sentence dataset
-  EXPORT normrec := RECORD
-    STRING word;
-    UNSIGNED8 sentId;
-    STRING text;
-  END;
-
   EXPORT normed_ds := NORMALIZE(words,COUNT(spsent),TRANSFORM(normrec,
                                               SELF.word := LEFT.word,
                                               SELF.sentId := docus[COUNTER].sentId,
                                               SELF.text := docus[COUNTER].text));
 
-  EXPORT wrec := RECORD
-    STRING word;
-    UNSIGNED8 sentId;
-    STRING text;
-    REAL8 tfidf_score;
-    t_Vector w_Vector;
-  END;
-
   //used in some experimental versions
   //of final vector combination steps,
   //modeled after the distributed approach
   //found in TextVectors: calcsentvector,sent2vector
-  EXPORT optrec := RECORD
-    UNSIGNED8 sentId;
-    STRING text;
-    t_Vector w_Vector;
-  END;
-
-  EXPORT optrec2 := RECORD
-    UNSIGNED8 sentId;
-    STRING text;
-    t_Vector w_Vector;
-  END;
-
-  //Multiplying vectors by a real number
-  EXPORT t_Vector vecmult(t_Vector v,REAL8 x) := BEGINC++
-    #body
-    //size32_t N = lenV;
-    size32_t N = lenV/sizeof(double);
-    __lenResult = (size32_t) (N * sizeof(double));
-    double *wout = (double*) rtlMalloc(__lenResult);
-    __isAllResult = false;
-    __result = (void *) wout;
-    double *vv = (double *) v;
-    double xx = (double) x;
-    for (unsigned i = 0; i < N; i++)
-    {
-      wout[i] = vv[i] * xx;
-    }
-  ENDC++;
   
   EXPORT tfidf_norm := FUNCTION
     nds := normed_ds;
-
-    //switch from opt to wrec version based
-    //on whichever approach you are trying
-    //for the final step; if wrec just
-    //uncomment word,tfidf_score
-    //optrec tfscoreno0withvec_T(normrec nr) := TRANSFORM
     wrec tfscoreno0withvec_T(normrec nr) := TRANSFORM
       tscore := sp.tfidf(STD.Str.ToLowerCase(nr.word),nr.text);
       int_ts0 := TRUNCATE(tscore/tfidf_score_cutoff);
@@ -137,43 +93,21 @@ EXPORT sent_setup_norm(DATASET(Types.Sentence) tsents,DATASET(Types.TextMod) big
       SELF.tfidf_score := IF(int_ts0=0,SKIP,tscore);
       SELF.w_Vector := IF(int_ts0=0,[SKIP],vecmult(wmod(STD.Str.ToLowerCase(text)=STD.Str.ToLowerCase(nr.word))[1].vec,tscore));
     END;
-
     out_norm := PROJECT(nds,tfscoreno0withvec_T(LEFT));
-
     RETURN out_norm;
   END;
 
   EXPORT tfidf_norm_exp := FUNCTION
-    optrec2 tfscoreno0(normrec nr) := TRANSFORM
+    optrec tfscoreno0(normrec nr) := TRANSFORM
       tscore := sp.tfidf(STD.Str.ToLowerCase(nr.word),nr.text);
       int_ts0 := TRUNCATE(tscore/tfidf_score_cutoff);
       SELF.sentId := IF(int_ts0=0,SKIP,nr.sentId);
       SELF.text := IF(int_ts0=0,SKIP,nr.word);
       SELF.w_Vector := IF(int_ts0=0,[SKIP],vecmult(wmod(STD.Str.ToLowerCase(text)=STD.Str.ToLowerCase(nr.word))[1].vec,tscore));
     END;
-
     out_norm := PROJECT(normed_ds,tfscoreno0(LEFT));
-
     RETURN out_norm;
   END;
-
-  //C++ function for adding t_Vector sets element-wise
-  EXPORT t_Vector addvecs(t_Vector v1,t_Vector v2) := BEGINC++
-    #body
-    //size32_t N = lenV1;
-    size32_t N = lenV1/sizeof(double);
-    __lenResult = (size32_t) (N*sizeof(double));
-    double *wout = (double *) rtlMalloc(__lenResult);
-    __isAllResult = false;
-    __result = (void *) wout;
-    double *vv1 = (double *) v1;
-    double *vv2 = (double *) v2;
-
-    for (unsigned i = 0; i < N; i++)
-    {
-      wout[i] = vv1[i]+vv2[i];
-    }
-  ENDC++;
 
   EXPORT sembed_grp_experimental := FUNCTION
     svb_cpy := tfidf_norm;
@@ -381,7 +315,7 @@ EXPORT sent_setup_norm(DATASET(Types.Sentence) tsents,DATASET(Types.TextMod) big
 
 
   //this is the ninth approach. Similar to the eighth approach but instead of performing sorts each time the pairs of records are
-  //combined, we start by turning each normalized row into a set of all sentences that is 'empty' or contins 0 vectors except
+  //combined, we start by turning each normalized row into a set of all sentences that is 'empty' or contains 0 vectors except
   //on the sentId for the corresponding row of the normalized dataset. This seems like it blows up our already huge memory even
   //larger, but hopefully the lack of sorting will provide a performance improvement.
   EXPORT nest_tfall := FUNCTION
@@ -404,7 +338,7 @@ EXPORT sent_setup_norm(DATASET(Types.Sentence) tsents,DATASET(Types.TextMod) big
 
   EXPORT calctfidfvector := FUNCTION
     sentWords := SORT(DISTRIBUTE(tfidf_norm_exp,sentId),sentId,LOCAL);
-    optrec2 doRollup(optrec2 lr,optrec2 rr) := TRANSFORM
+    optrec doRollup(optrec lr,optrec rr) := TRANSFORM
       SELF.w_Vector := lr.w_Vector + rr.w_Vector;
       SELF.sentId := lr.sentId;
       SELF.text := '';

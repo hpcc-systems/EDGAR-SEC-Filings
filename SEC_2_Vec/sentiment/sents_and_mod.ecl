@@ -8,6 +8,15 @@ IMPORT * FROM SEC_2_Vec.sentiment;
 Sentence := tv.Types.Sentence;
 TextMod := tv.Types.TextMod;
 
+//Sets up labeled sentences and a vanilla word model for
+//training tfidf vectors and evaluating language tests
+//INITIALIZED DATASETS:
+//
+// if the output is assigned to 'out', returns a module
+// that contains the model inside of out.m, the labeled
+// sentences in out.p, the vanilla sentence vectors in
+// trainrec format in out.tr, and raw numbered sentences
+// in out.s
 EXPORT sents_and_mod := FUNCTION
     path10k := '~ncf::edgarfilings::raw::labels_allsecs_all_10k';
     path10q := '~ncf::edgarfilings::raw::plainlabel_allsecs_all';

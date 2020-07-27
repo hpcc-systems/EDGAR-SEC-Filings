@@ -59,11 +59,6 @@ EXPORT simlabs(DATASET(trainrec) traindat,STRING method='add') := MODULE
 
         starter := PROJECT(fname_bytick,addsimfield_T(LEFT));
 
-        // comprec comproll_T(comprec sl,comprec sr,INTEGER C) := TRANSFORM
-        //     SELF.fname := RIGHT.fname;
-
-        // END;
-
         comprec successive_sim_T(comprec l,comprec r) := TRANSFORM
             SELF.sid := L.sid + 1;
             SELF.fname := r.fname;
@@ -110,8 +105,7 @@ EXPORT simlabs(DATASET(trainrec) traindat,STRING method='add') := MODULE
         RETURN out;    
     END;
 
-    EXPORT getFields := FUNCTION
-        sal := sim_and_labels;
+    EXPORT getFields(DATASET(simlabelrec) sal) := FUNCTION
         ind := PROJECT(sal,TRANSFORM(nf,SELF.wi := 1,
                                         SELF.id := LEFT.sid,
                                         SELF.number := 1,
