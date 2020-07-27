@@ -1,0 +1,9 @@
+<Cache hash="8742968833293342473">
+<Attr module="SEC_2_Vec.sentiment.tests" name="direct_doctest">
+ <Depend module="" name="types"/>
+ <Depend module="" name="ml_core"/>
+ <Depend module="_versions.ML_Core.V3_2_2.ML_Core" name="analysis"/>
+ <Depend module="SEC_2_Vec.sentiment" name="sectors"/>
+ <Depend module="SEC_2_Vec.sentiment.tests" name="doc_secmod_n"/>
+</Attr>
+</Cache>

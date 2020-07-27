@@ -17,8 +17,22 @@ t_Vector := tv.Types.t_Vector;
 
 EXPORT doc_model(DATASET(trainrec) sents) := FUNCTION
 
+    vecLen := COUNT(sents[1].vec);
     out := AGGREGATE(sents,trainrec,TRANSFORM(trainrec,SELF.vec := addvecs(LEFT.vec,RIGHT.vec),
-                                                        SELF := LEFT),LEFT.fname,LOCAL);
+                                                        SELF := LEFT),TRANSFORM(trainrec,SELF.vec := addvecs(RIGHT1.vec,RIGHT2.vec), SELF := RIGHT1),LEFT.fname);
 
-    RETURN PROJECT(out,TRANSFORM(trainrec,SELF.vec := tv.Internal.svUtils.normalizeVector(LEFT.vec),SELF := LEFT));
+    sentFiles := SORT(DISTRIBUTE(sents,HASH32(fname)),fname,LOCAL);
+
+    trainrec doRollup(trainrec lr,trainrec rr) := TRANSFORM
+        SELF.vec := lr.vec + rr.vec;
+        SELF.id := lr.id;
+        SELF := lr;
+    END;
+
+    fileOut0 := ROLLUP(sentFiles,doRollup(LEFT,RIGHT),fname,LOCAL);
+
+    fileOut := PROJECT(fileOut0,TRANSFORM(trainrec,SELF.vec := tv.Internal.svUtils.calcSentVector(LEFT.vec,vecLen),
+                                                SELF := LEFT));
+
+    RETURN fileOut;
 END;
