@@ -1,11 +1,15 @@
 IMPORT STD;
 IMPORT SEC_2_Vec;
+IMPORT ML_Core;
+IMPORT ML_Core.Types as mlTypes;
 IMPORT * FROM SEC_2_Vec;
 IMPORT similarity from SEC_2_Vec;
+IMPORT Types as secTypes;
+IMPORT * from secTypes;
 
+nf := mlTypes.NumericField;
+df := mlTypes.DiscreteField;
 docsim := similarity.docsim;
-
-trainrec := sentiment.sent_model.trainrec;
 
 EXPORT simlabs(DATASET(trainrec) traindat,STRING method='add') := MODULE
     EXPORT get_ticker(STRING f) := FUNCTION
@@ -104,5 +108,23 @@ EXPORT simlabs(DATASET(trainrec) traindat,STRING method='add') := MODULE
         out := PROJECT(ssc,simlabel_T(LEFT));
 
         RETURN out;    
+    END;
+
+    EXPORT getFields := FUNCTION
+        sal := sim_and_labels;
+        ind := PROJECT(sal,TRANSFORM(nf,SELF.wi := 1,
+                                        SELF.id := LEFT.sid,
+                                        SELF.number := 1,
+                                        SELF.value := LEFT.similarity));
+        dep := PROJECT(sal,TRANSFORM(df,SELF.wi := 1,
+                                        SELF.id := LEFT.sid,
+                                        SELF.number := 1,
+                                        SELF.value := (INTEGER4) LEFT.label));
+
+        result := MODULE
+            EXPORT x := ind;
+            EXPORT y := dep;
+        END;
+        RETURN result;
     END;
 END;

@@ -1,5 +1,5 @@
-<Cache hash="8742968833293342473">
-<Attr module="SEC_2_Vec.similarity" name="docsim">
+<Cache hash="6442366839921406013">
+<Attr module="SEC_2_Vec.similarity.tests" name="docvecs">
  <Depend module="TextVectors.Internal" name="svutils"/>
  <Depend module="" name="types"/>
  <Depend module="TextVectors" name="types"/>

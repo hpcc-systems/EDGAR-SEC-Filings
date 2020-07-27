@@ -1,0 +1,7 @@
+<Cache hash="8742968833293342473">
+<Attr module="SEC_2_Vec" name="traintestsplit">
+ <Depend module="EDGAR_Extract" name="text_tools"/>
+ <Depend module="SEC_2_Vec.sentiment" name="sectors"/>
+ <Depend module="" name="types"/>
+</Attr>
+</Cache>

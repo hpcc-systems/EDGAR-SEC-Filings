@@ -1,0 +1,7 @@
+<Cache hash="8742968833293342473">
+<Attr module="SEC_2_Vec.similarity.tests" name="qoq_holdout_test">
+ <Depend module="" name="ml_core"/>
+ <Depend module="SEC_2_Vec.similarity" name="qoq_secmod_n"/>
+ <Depend module="SEC_2_Vec.sentiment" name="sectors"/>
+</Attr>
+</Cache>

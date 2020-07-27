@@ -2,8 +2,8 @@ IMPORT * FROM SEC_2_Vec;
 IMPORT * FROM SEC_2_Vec.sentiment;
 IMPORT TextVectors as tv;
 IMPORT * from tv.internal.svutils;
+IMPORT * FROM Types;
 t_Vector := tv.types.t_vector;
-trec := sent_model.trainrec;
 
 #OPTION('outputLimit',1000);
 
@@ -12,7 +12,7 @@ trec := sent_model.trainrec;
 //tdwl := sentiment.sent_model.trndata_wlbl(path,TRUE,'s&p');
 //tdwl := sentiment.sent_model.
 
-sandplblvn := DATASET(WORKUNIT('W20200712-194048','sandp_label_vanilla_data'),trec);
+sandplblvn := DATASET(WORKUNIT('W20200712-194048','sandp_label_vanilla_data'),trainrec);
 
 // path10k := '~ncf::edgarfilings::raw::labels_allsecs_all_10k';
 // path10q := '~ncf::edgarfilings::raw::plainlabel_allsecs_all';

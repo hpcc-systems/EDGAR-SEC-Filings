@@ -1,10 +1,10 @@
 IMPORT * FROM SEC_2_Vec.similarity;
 IMPORT * FROM SEC_2_Vec.sentiment;
-trec := sentiment.sent_model.trainrec;
+IMPORT * FROM Types;
 
 #OPTION('outputLimit',100);
 
-sandplblvn := DATASET(WORKUNIT('W20200712-194048','sandp_label_vanilla_data'),trec);
+sandplblvn := DATASET(WORKUNIT('W20200712-194048','sandp_label_vanilla_data'),trainrec);
 
 sl1 := simlabs(sandplblvn,'multiply');
 sl2 := simlabs(sandplblvn,'add');

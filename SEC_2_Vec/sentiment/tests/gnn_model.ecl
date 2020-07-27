@@ -1,10 +1,12 @@
 IMPORT PYTHON3 AS Python;
+IMPORT ML_Core;
 IMPORT * FROM Python;
 IMPORT * FROM SEC_2_Vec.sentiment;
-IMPORT ML_Core.Types;
+IMPORT * FROM sentiment.tests;
 IMPORT * FROM GNN;
-nf := Types.NumericField;
-df := Types.DiscreteField;
+
+nf := ML_Core.Types.NumericField;
+df := ML_Core.Types.DiscreteField;
 t_tens := Tensor.R4.t_Tensor;
 
 mod_form :=  ['Dense(64, input_shape=(100,))',
@@ -17,8 +19,8 @@ mod_comp := ['loss="binary_crossentropy",optimizer="adam",metrics=["accuracy"]']
 sess_a := GNNI.GetSession();
 sess_b := GNNI.DefineModel(sess_a,mod_form,mod_comp[1]);
 
-spdat := sentiment.tests.sandplblvn;
-ff := sentiment.sent_model.getFields(spdat);
+spdat := sandplblvn;
+ff := sent_model.getFields(spdat);
 Xn := ff.NUMF;
 Yd := ff.DSCF;
 

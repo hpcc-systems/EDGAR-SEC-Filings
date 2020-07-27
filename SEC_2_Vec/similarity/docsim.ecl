@@ -2,9 +2,9 @@ IMPORT SEC_2_Vec;
 IMPORT * FROM SEC_2_Vec;
 IMPORT TextVectors as tv;
 IMPORT * FROM tv.internal.svUtils;
+IMPORT * FROM Types;
 
 t_Vector := tv.Types.t_Vector;
-trainrec := sentiment.sent_model.trainrec;
 
 EXPORT REAL8 docsim(DATASET(trainrec) doca,DATASET(trainrec) docb,STRING method='add') := FUNCTION
 

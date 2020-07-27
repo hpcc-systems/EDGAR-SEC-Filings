@@ -4,10 +4,10 @@ IMPORT * FROM SEC_2_Vec.sentiment;
 IMPORT * FROM SEC_2_Vec.similarity;
 IMPORT TextVectors as tv;
 IMPORT * FROM tv.internal.svUtils;
-IMPORT tv.Types;
-trec := sentiment.sent_model.trainrec;
-tmod := types.textmod;
-tvec := types.t_Vector;
+IMPORT * FROM Types;
+
+tmod := tv.types.textmod;
+tvec := tv.types.t_Vector;
 
 sentrec := RECORD
     UNSIGNED8 sentId;

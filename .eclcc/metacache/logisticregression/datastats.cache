@@ -2,6 +2,7 @@
 <Attr module="LogisticRegression" name="datastats">
  <Depend module="LogisticRegression" name="types"/>
  <Depend module="LogisticRegression" name="constants"/>
- <Depend module="ML_Core" name="types"/>
+ <Depend module="" name="ml_core"/>
+ <Depend module="_versions.ML_Core.V3_2_2.ML_Core" name="types"/>
 </Attr>
 </Cache>

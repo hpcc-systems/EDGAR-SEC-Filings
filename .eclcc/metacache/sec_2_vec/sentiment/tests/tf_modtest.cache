@@ -1,15 +1,13 @@
-<Cache hash="6442366839921406013">
-<Attr module="SEC_2_Vec.sentiment.tests" name="bothlbl_secmod_n">
+<Cache hash="8742968833293342473">
+<Attr module="SEC_2_Vec.sentiment.tests" name="tf_modtest">
  <Depend module="" name="ml_core"/>
  <Depend module="EDGAR_Extract" name="text_tools"/>
- <Depend module="TextVectors" name="types"/>
  <Depend module="" name="types"/>
  <Depend module="SEC_2_Vec.sentiment" name="sectors"/>
- <Depend module="SEC_2_Vec" name="lbljoin"/>
- <Depend module="SEC_2_Vec" name="traintestsplit"/>
+ <Depend module="SEC_2_Vec.sentiment" name="traintestsplit"/>
  <Depend module="SEC_2_Vec.sentiment" name="sent_model"/>
  <Depend module="LogisticRegression" name="binomiallogisticregression"/>
- <Depend module="_versions.ML_Core.V3_2_2.ML_Core" name="analysis"/>
+ <Depend module="ML_Core" name="analysis"/>
  <Depend module="SEC_2_Vec.sentiment" name="docsent"/>
 </Attr>
 </Cache>
