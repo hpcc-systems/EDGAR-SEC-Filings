@@ -1,7 +1,6 @@
 <Cache hash="8742968833293342473">
 <Attr module="SEC_2_Vec.sentiment" name="tfidf">
  <Depend module="" name="types"/>
- <Depend module="" name="ml_core"/>
  <Depend module="Internal" name="svutils"/>
  <Depend module="TextVectors" name="types"/>
  <Depend module="TextVectors.Internal" name="corpus"/>

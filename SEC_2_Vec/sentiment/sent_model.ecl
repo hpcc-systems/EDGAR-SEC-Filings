@@ -65,7 +65,12 @@ EXPORT sent_model := MODULE
         vanout := PROJECT(vands,lrT(LEFT,labelSentences));
         tfout  := tfidf(model(typ=1),rawsents,100,1);
 
-        RETURN [vanout,tfout];
+        result := MODULE
+            EXPORT s := [vanout,tfout];
+            EXPORT m := model;
+        END;
+
+        RETURN result;
     END;
     
     //takes sentence vectors and prepares for ML.

@@ -1,6 +1,7 @@
 <Cache hash="8742968833293342473">
 <Attr module="SEC_2_Vec.sentiment.tests" name="gnn_test">
  <Depend module="" name="gnn"/>
- <Depend module="_versions.GNN.V1_1.GNN.Test" name="classictest"/>
+ <Depend module="" name="ml_core"/>
+ <Depend module="GNN.Test" name="tenstest"/>
 </Attr>
 </Cache>

@@ -11,7 +11,7 @@ wordExt := tv.Types.wordExt;
 WordList := tv.Types.WordList;
 SentInfo := tv.Types.SentInfo;
 
-EXPORT DATASET(trainrec) tfidf(DATASET(TextMod) mod,DATASET(sveclblrec) svec,UNSIGNED2 vecLen,UNSIGNED4 wordNGRAMS) := FUNCTION
+EXPORT DATASET(trainrec) tfidf(DATASET(TextMod) mod,DATASET(sveclblrec) svec,UNSIGNED2 vecLen=100,UNSIGNED4 wordNGRAMS=1) := FUNCTION
 
     sent := PROJECT(svec,TRANSFORM(Sentence,SELF.sentId := LEFT.sentId,SELF.text := LEFT.text));
 

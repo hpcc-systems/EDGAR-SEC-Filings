@@ -65,6 +65,27 @@ EXPORT Text_Tools := MODULE
         
         RETURN grplbltxtconcat;
     END;
+
+    EXPORT concatfnmrec := RECORD
+        STRING text;
+        STRING fname;
+    END;
+
+    EXPORT concatfnmrec fnmConcat(DATASET(concatfnmrec) File,STRING kDelimiter = ' ') := FUNCTION
+        // sortFile := SORT(File,File.label);
+        // grplbl   := GROUP(sortFile,label);
+        sortFile := SORT(File,File.fname);
+        grplbl := GROUP(sortFile,fname);
+
+        concatfnmrec fnmconcat_grp(concatfnmrec l,DATASET(concatfnmrec) allRows) := TRANSFORM
+            SELF.text := Concat(TABLE(allRows,{STRING text := allRows.text}),kDelimiter);
+            SELF.fname := l.fname;
+        END;
+
+        grpfnmtxtconcat := ROLLUP(grplbl,GROUP,fnmconcat_grp(LEFT,ROWS(LEFT)));
+        
+        RETURN grpfnmtxtconcat;
+    END;
     
     EXPORT FixTextBlock(DATASET(Extract_Layout_modified.Entry_clean) ent) := FUNCTION
       
@@ -284,6 +305,48 @@ EXPORT Text_Tools := MODULE
         END;
 
         RETURN TABLE(lblSentlist,lblFinalrec);
+    END;
+
+    EXPORT sep_sents_fnm(DATASET(concatfnmrec) cr) := FUNCTION
+        pattern endpunct := ['.','?','!'];
+        pattern ws       := ' ';
+        pattern mess     := PATTERN('[A-Z]') (ANY NOT IN endpunct)+;
+        pattern sentence := mess endpunct ;
+        pattern begsent  := '[OPN]' sentence ws PATTERN('[A-Z]') OPT('[CLS]');
+        pattern midsent  := endpunct ws sentence ws PATTERN('[A-Z]');
+        pattern endsent  := OPT('[OPN]') OPT(endpunct ws) sentence '[CLS]';
+        rule    nicesent := begsent|midsent|endsent;
+               
+        fnmOutrec := RECORD
+          UNSIGNED8 ones;
+          UNSIGNED8 sentId;
+          STRING sentence;
+          STRING fname;
+        END;
+
+        fnmOutrec fnmParseT(RECORDOF(cr) f) := TRANSFORM
+            SELF.ones := 1;
+            SELF.sentId:= 0;
+            SELF.sentence:= MATCHTEXT(nicesent/sentence);
+            SELF.fname := f.fname;
+        END;
+
+        fnmSentparse := PARSE(cr,text,nicesent,fnmParseT(LEFT),SCAN);
+
+        fnmOutrec fnmConsec(fnmOutrec L,fnmOutrec R) := TRANSFORM
+          SELF.sentId := L.sentId + R.ones;
+          SELF := R;
+        END;
+
+        fnmSentlist := ITERATE(fnmSentparse,fnmConsec(LEFT,RIGHT));
+
+        fnmFinalrec := RECORD
+          UNSIGNED8 sentId := fnmSentlist.sentId;
+          STRING text := fnmSentlist.sentence;
+          STRING fname := fnmSentlist.fname;
+        END;
+
+        RETURN TABLE(fnmSentlist,fnmFinalrec);
     END;
 
     //FIXME: We want money descriptions, not just money!
