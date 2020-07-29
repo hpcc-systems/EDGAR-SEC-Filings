@@ -84,16 +84,6 @@ perf := DATASET(pathperf,csvrec,CSV(HEADING(1)));
 
 perfno0 := perf(tot_return!=0,sp_return!=0);
 
-perfrec := RECORD
-    UNSIGNED8 sentId;
-    STRING fname;
-    STRING label;
-    STRING text;
-    t_Vector vec;
-    REAL8 tot_return;
-    REAL8 sp_return;
-END;
-
 outvn := JOIN(thisvnpredsdoc,perfno0,LEFT.fname=RIGHT.fname,TRANSFORM(perfrec,SELF.sentId := LEFT.id,
                                                                 SELF.fname := LEFT.fname,
                                                                 SELF.label := LEFT.label,

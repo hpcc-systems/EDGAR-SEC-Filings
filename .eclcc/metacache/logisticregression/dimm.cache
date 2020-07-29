@@ -1,4 +1,4 @@
-<Cache hash="8742968833293342473">
+<Cache hash="6442366839921406013">
 <Attr module="LogisticRegression" name="dimm">
  <Depend module="std" name="blas"/>
 </Attr>
