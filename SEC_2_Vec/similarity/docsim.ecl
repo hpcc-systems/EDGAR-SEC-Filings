@@ -8,25 +8,11 @@ t_Vector := tv.Types.t_Vector;
 
 EXPORT REAL8 docsim(DATASET(trainrec) doca,DATASET(trainrec) docb,STRING method='add') := FUNCTION
 
-    midrec := RECORD
-        REAL8 simval;
-    END;
-
-    outrec := RECORD
-        INTEGER numsims;
-        REAL8   sumsims;
-    END;
-
-    outrec_prod := RECORD
-        INTEGER numsims;
-        REAL8   comsims;
-    END;
-
-    midrec finish_sim_T(trainrec a,t_Vector vecb) := TRANSFORM
+    midrecsim finish_sim_T(trainrec a,t_Vector vecb) := TRANSFORM
         SELF.simval := cosineSim(a.vec,vecb,100);
     END;
 
-    midrec iter_prod_T(midrec ml,midrec mr,INTEGER C) := TRANSFORM
+    midrecsim iter_prod_T(midrecsim ml,midrecsim mr,INTEGER C) := TRANSFORM
         SELF.simval := IF(C=1,mr.simval,ml.simval*mr.simval);
     END;
 

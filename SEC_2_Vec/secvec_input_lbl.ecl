@@ -1,6 +1,8 @@
 IMPORT STD;
 IMPORT * FROM EDGAR_Extract;
 IMPORT * FROM EDGAR_Extract.Text_Tools;
+IMPORT * FROM Types;
+
 mainrec := EDGAR_Extract.Extract_Layout_modified.Main;
 
 EXPORT secvec_input_lbl(STRING inpath10q,STRING inpath10k,BOOLEAN prelabeled=TRUE,STRING comparedto='plain') := FUNCTION
@@ -66,35 +68,6 @@ EXPORT secvec_input_lbl(STRING inpath10q,STRING inpath10k,BOOLEAN prelabeled=TRU
     
     ds := IF(prelabeled,label_filings(plain),label_filings(PROJECT(plain,lblT(LEFT,COUNTER))));
 
-    // Entry_wlabel := RECORD
-    //   UNICODE element;
-    //   UNICODE contextRef;
-    //   UNICODE unitRef;
-    //   UNICODE decimals;
-    //   STRING content;
-    //   STRING label;
-    // END;
-
-    Entry_wlabel := RECORD
-      UNICODE element;
-      UNICODE contextRef;
-      UNICODE unitRef;
-      UNICODE decimals;
-      STRING content;
-      STRING label;
-      STRING fname;
-    END;
-
-    //Currently experimenting with filename inclusion in each row
-    // Entry_wlabel augment_entry(label_rec bigrow,Extract_Layout_modified.Entry_clean r) := TRANSFORM
-    //   SELF.element := r.element;
-    //   SELF.contextRef := r.contextRef;
-    //   SELF.unitRef := r.unitRef;
-    //   SELF.decimals := r.decimals;
-    //   SELF.content := r.content;
-    //   SELF.label := bigrow.label;
-    // END;
-
     Entry_wlabel augment_entry(label_rec bigrow,Extract_Layout_modified.Entry_clean r) := TRANSFORM
       SELF.element := r.element;
       SELF.contextRef := r.contextRef;
@@ -103,31 +76,6 @@ EXPORT secvec_input_lbl(STRING inpath10q,STRING inpath10k,BOOLEAN prelabeled=TRU
       SELF.content := r.content;
       SELF.label := bigrow.label;
       SELF.fname := bigrow.fileName;
-    END;
-
-    final_label_rec := RECORD
-      STRING fileName;
-      UNICODE accessionNumber;
-      //UNICODE     name;
-      //UNICODE     filingType;
-      UNICODE     filingDate;
-      //UNICODE     reportPeriod;
-      //UNICODE     is_smallbiz;
-      //UNICODE     pubfloat;
-    //UNICODE     comsharesout;
-      //UNICODE     wellknown;
-      //UNICODE     shell;
-      //UNICODE     centralidxkey;
-      //UNICODE     amendflag;
-      //UNICODE     filercat;
-      //UNICODE     fyfocus;
-      //UNICODE     fpfocus;
-      //UNICODE     emerging;
-    //UNICODE     ticker;
-      //UNICODE     volfilers;
-      //UNICODE     currentstat;
-      //UNICODE     fyend;
-      DATASET(Entry_wlabel) values;
     END;
 
     final_label_rec apply_augment(RECORDOF(ds) f) := TRANSFORM

@@ -4,6 +4,7 @@ IMPORT ML_Core;
 IMPORT ML_Core.Types as mlTypes;
 IMPORT * FROM SEC_2_Vec;
 IMPORT similarity from SEC_2_Vec;
+IMPORT * FROM EDGAR_Extract.Text_Tools;
 IMPORT Types as secTypes;
 IMPORT * from secTypes;
 
@@ -12,21 +13,11 @@ df := mlTypes.DiscreteField;
 docsim := similarity.docsim;
 
 EXPORT simlabs(DATASET(trainrec) traindat,STRING method='add') := MODULE
-    EXPORT get_ticker(STRING f) := FUNCTION
-        parts := STD.Str.SplitWords(f,'_',FALSE);
-        tick := parts[1];
-        RETURN tick;
-    END;
-
-    EXPORT tickrec := RECORD
-        STRING fname;
-        STRING ticker;
-    END;
 
     EXPORT fname_bytick := FUNCTION
         helpertickrec := RECORD
             STRING fname  := traindat.fname;
-            STRING ticker := get_ticker(traindat.fname);
+            STRING ticker := get_tick(traindat.fname);
         END;
 
         tickds := TABLE(traindat,helpertickrec);
@@ -35,13 +26,6 @@ EXPORT simlabs(DATASET(trainrec) traindat,STRING method='add') := MODULE
         fnames := DEDUP(SORT(tickds,tickds.fname),tickds.fname);
         ticks := SET(ticksdedup,ticksdedup.ticker);
         RETURN fnames;
-    END;
-
-    EXPORT comprec := RECORD
-        INTEGER sid;
-        STRING fname;
-        STRING ticker;
-        REAL8 similarity;
     END;
 
     EXPORT dat_from_name(STRING fn) := FUNCTION
@@ -75,21 +59,6 @@ EXPORT simlabs(DATASET(trainrec) traindat,STRING method='add') := MODULE
     //get similarity scores for consecutive filings
     //result should be sentiment labels paired with similarity labels
 
-    EXPORT grablabel(STRING fname) := FUNCTION
-        parts := STD.Str.SplitWords(fname,'_',FALSE);
-        labelxml := parts[4];
-        parts2 := STD.Str.SplitWords(labelxml,'.',FALSE);
-        label := parts2[1];
-        RETURN label;
-    END;
-
-    EXPORT simlabelrec := RECORD
-        INTEGER sid;
-        STRING fname;
-        REAL8 similarity;
-        STRING label
-    END;
-
     EXPORT sim_and_labels := FUNCTION
         ssc := simsentcomp;
 
@@ -97,7 +66,7 @@ EXPORT simlabs(DATASET(trainrec) traindat,STRING method='add') := MODULE
             SELF.sid := cr.sid;
             SELF.fname := cr.fname;
             SELF.similarity := cr.similarity;
-            SELF.label := grablabel(cr.fname);
+            SELF.label := get_label(cr.fname);
         END;    
 
         out := PROJECT(ssc,simlabel_T(LEFT));

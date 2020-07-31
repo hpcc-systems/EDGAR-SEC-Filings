@@ -103,4 +103,67 @@ EXPORT Types := MODULE
         INTEGER4 label;
     END;
 
+    EXPORT midrecsim := RECORD
+        REAL8 simval;
+    END;
+
+    EXPORT outrec_prod := RECORD
+        INTEGER numsims;
+        REAL8   comsims;
+    END;
+
+    EXPORT tickrec := RECORD
+        STRING fname;
+        STRING ticker;
+    END;
+
+    EXPORT comprec := RECORD
+        INTEGER sid;
+        STRING fname;
+        STRING ticker;
+        REAL8 similarity;
+    END;
+
+    EXPORT simlabelrec := RECORD
+        INTEGER sid;
+        STRING fname;
+        REAL8 similarity;
+        STRING label
+    END;
+
+    EXPORT Entry_wlabel := RECORD
+      UNICODE element;
+      UNICODE contextRef;
+      UNICODE unitRef;
+      UNICODE decimals;
+      STRING content;
+      STRING label;
+      STRING fname;
+    END;
+
+    EXPORT final_label_rec := RECORD
+      STRING fileName;
+      UNICODE accessionNumber;
+      //UNICODE     name;
+      //UNICODE     filingType;
+      UNICODE     filingDate;
+      //UNICODE     reportPeriod;
+      //UNICODE     is_smallbiz;
+      //UNICODE     pubfloat;
+      //UNICODE     comsharesout;
+      //UNICODE     wellknown;
+      //UNICODE     shell;
+      //UNICODE     centralidxkey;
+      //UNICODE     amendflag;
+      //UNICODE     filercat;
+      //UNICODE     fyfocus;
+      //UNICODE     fpfocus;
+      //UNICODE     emerging;
+      //UNICODE     ticker;
+      //UNICODE     volfilers;
+      //UNICODE     currentstat;
+      //UNICODE     fyend;
+      DATASET(Entry_wlabel) values;
+    END;
+
 END;
