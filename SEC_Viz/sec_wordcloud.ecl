@@ -3,6 +3,10 @@ IMPORT Visualizer;
 IMPORT * FROM SEC_Viz;
 IMPORT STD;
 
+//prepares numbered sentences for
+//plotting as a wordcloud using
+//HPCCSystems Visualizer bundle
+
 EXPORT sec_wordcloud := MODULE
   EXPORT word_freqs(STRING tpath, STRING tform) := FUNCTION
 

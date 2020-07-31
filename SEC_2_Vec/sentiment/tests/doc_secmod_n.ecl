@@ -6,7 +6,7 @@ IMPORT ML_Core.Analysis.Classification as ml_ac;
 IMPORT * FROM Types;
 IMPORT LearningTrees as LT;
 
-EXPORT doc_secmod_n(STRING veclbltype = 'pl_vn',INTEGER n,STRING spliton='ticker') := FUNCTION
+EXPORT doc_secmod_n(STRING veclbltype = 'pl_vn',INTEGER n,STRING spliton='ticker',STRING mtyp='BLR') := FUNCTION
     pl_vn := DATASET(WORKUNIT('W20200726-092906','plain_vanilla'),trainrec);
     pl_tf := DATASET(WORKUNIT('W20200726-092906','plain_tfidf'),trainrec);
 
@@ -29,16 +29,15 @@ EXPORT doc_secmod_n(STRING veclbltype = 'pl_vn',INTEGER n,STRING spliton='ticker
     Xh := ff_tst.NUMF;
     Yh := ff_tst.DSCF;
 
-    //plainblr := LR.BinomialLogisticRegression();
+    plainblr := LR.BinomialLogisticRegression();
     CF := LT.ClassificationForest();
 
-    //mod := plainblr.GetModel(X,Y);
-    mod := CF.GetModel(X,Y);
+    modtyp := IF(mtyp='BLR',plainblr,CF);
 
-    //preds := plainblr.Classify(mod,X);
-    //predsh := plainblr.Classify(mod,Xh);
-    preds := CF.Classify(mod,X);
-    predsh := CF.Classify(mod,Xh);
+    mod := modtyp.GetModel(X,Y);
+
+    preds := modtyp.Classify(mod,X);
+    predsh := modtyp.Classify(mod,Xh);
 
     pod := ml_ac.Accuracy(preds,Y);
     podh := ml_ac.Accuracy(predsh,Yh);
