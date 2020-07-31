@@ -39,7 +39,7 @@ EXPORT svUtils := MODULE
         }
     ENDC++;
 
-    //concatenate vectors (sets) for use with text utils
+    //concatenate vectors (sets) for use with calcsentvector
     EXPORT t_Vector rollsets(DATASET(wrec) r) := FUNCTION
       outall := ROLLUP(r,TRUE,TRANSFORM(wrec,SELF.w_Vector := LEFT.w_Vector + RIGHT.w_Vector,SELF := LEFT));
       outlast := outall[COUNT(outall)];

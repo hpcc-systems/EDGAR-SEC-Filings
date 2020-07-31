@@ -1,6 +1,12 @@
 IMPORT Text_Tools FROM EDGAR_Extract AS tt;
 IMPORT secvec_input FROM SEC_2_Vec;
 
+//takes a logical file path 'trainPath' and extracts
+//and formats the text field for use in the wordcloud
+//method. the 'trainform' parameter expects the string
+//'SEC' if the input file is a BLOB of XBRL files, and
+//any other value for 'trainform' will currently treat
+//input data as a csv with fields sentId,text
 
 EXPORT wordcloud_prep(STRING trainPath, STRING trainform) := FUNCTION
     ptext_extr(STRING tPath) := FUNCTION
