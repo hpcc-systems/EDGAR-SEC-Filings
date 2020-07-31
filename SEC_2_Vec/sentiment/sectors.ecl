@@ -1,4 +1,5 @@
 IMPORT * FROM EDGAR_Extract.Text_Tools;
+IMPORT * FROM Types;
 
 //contains utilities for filtering by
 //sector or listing the sectors in
@@ -12,10 +13,6 @@ IMPORT * FROM EDGAR_Extract.Text_Tools;
 // the given sector)
 
 EXPORT sectors := MODULE
-    EXPORT secrec := RECORD
-        STRING sector;
-        STRING filename;
-    END;
 
     EXPORT sectorticker := FUNCTION
         path := '~ncf::edgarfilings::supp::sector_guide_all';

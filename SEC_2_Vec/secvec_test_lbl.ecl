@@ -7,18 +7,8 @@ mainrec := EDGAR_Extract.Extract_Layout_modified.Main;
 EXPORT DATASET(sveclblrec) secvec_test_lbl(STRING inpath10q) := FUNCTION
 
     start10q := XBRL_HTML_File(inpath10q);
-    //start10k := XBRL_HTML_File(inpath10k);
 
     strec := RECORDOF(start10q);
-
-    Entry_fname := RECORD
-      UNICODE element;
-      UNICODE contextRef;
-      UNICODE unitRef;
-      UNICODE decimals;
-      STRING content;
-      STRING fname;
-    END;
 
     Entry_fname augment_entry(mainrec bigrow,Extract_Layout_modified.Entry_clean r) := TRANSFORM
       SELF.element := r.element;
@@ -27,31 +17,6 @@ EXPORT DATASET(sveclblrec) secvec_test_lbl(STRING inpath10q) := FUNCTION
       SELF.decimals := r.decimals;
       SELF.content := r.content;
       SELF.fname := bigrow.fileName;
-    END;
-
-    final_fname_rec := RECORD
-      STRING fileName;
-      UNICODE accessionNumber;
-      //UNICODE     name;
-      //UNICODE     filingType;
-      UNICODE     filingDate;
-      //UNICODE     reportPeriod;
-      //UNICODE     is_smallbiz;
-      //UNICODE     pubfloat;
-    //UNICODE     comsharesout;
-      //UNICODE     wellknown;
-      //UNICODE     shell;
-      //UNICODE     centralidxkey;
-      //UNICODE     amendflag;
-      //UNICODE     filercat;
-      //UNICODE     fyfocus;
-      //UNICODE     fpfocus;
-      //UNICODE     emerging;
-    //UNICODE     ticker;
-      //UNICODE     volfilers;
-      //UNICODE     currentstat;
-      //UNICODE     fyend;
-      DATASET(Entry_fname) values;
     END;
 
     final_fname_rec apply_augment(strec f) := TRANSFORM

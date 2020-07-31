@@ -2,6 +2,7 @@ IMPORT ML_Core;
 IMPORT KMeans;
 IMPORT SEC_2_Vec;
 IMPORT * FROM SEC_2_Vec.sentiment;
+IMPORT * FROM Types;
 
 nf := ML_Core.Types.NumericField;
 df := ML_Core.Types.DiscreteField;
@@ -22,7 +23,7 @@ centroid_ds_2 := PROJECT(hundred0s,TRANSFORM(nf,
 centroids_artificial := centroid_ds_1+centroid_ds_2;
 
 
-vansents := DATASET(WORKUNIT('W20200713-063347','sandp_label_vanilla_data'),sent_model.trainrec);
+vansents := DATASET(WORKUNIT('W20200713-063347','sandp_label_vanilla_data'),trainrec);
 
 //zeroids := SET(vansents(label='0'),id);
 //oneids := SET(vansents(label='1'),id);

@@ -1,6 +1,5 @@
 <Cache hash="6442366839921406013">
 <Attr module="SEC_2_Vec.sentiment.tests" name="test_thisq">
- <Depend module="" name="ml_core"/>
  <Depend module="" name="types"/>
  <Depend module="TextVectors" name="types"/>
  <Depend module="SEC_2_Vec" name="secvec_input_lbl"/>

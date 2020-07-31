@@ -1,7 +1,7 @@
 <Cache hash="6442366839921406013">
 <Attr module="SEC_2_Vec.sentiment.tests" name="language_tests">
+ <Depend module="" name="types"/>
  <Depend module="TextVectors" name="types"/>
- <Depend module="SEC_2_Vec.sentiment" name="sent_model"/>
  <Depend module="TextVectors" name="sentencevectors"/>
 </Attr>
 </Cache>

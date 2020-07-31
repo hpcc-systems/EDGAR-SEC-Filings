@@ -1,4 +1,5 @@
 IMPORT TextVectors as tv;
+IMPORT * FROM Types;
 
 t_Vector := tv.Types.t_Vector;
 
@@ -37,4 +38,11 @@ EXPORT svUtils := MODULE
           wout[i] = vv1[i]+vv2[i];
         }
     ENDC++;
+
+    //concatenate vectors (sets) for use with text utils
+    EXPORT t_Vector rollsets(DATASET(wrec) r) := FUNCTION
+      outall := ROLLUP(r,TRUE,TRANSFORM(wrec,SELF.w_Vector := LEFT.w_Vector + RIGHT.w_Vector,SELF := LEFT));
+      outlast := outall[COUNT(outall)];
+      RETURN outlast.w_Vector;
+    END;
 END;

@@ -1,18 +1,16 @@
 IMPORT SEC_2_Vec;
 IMPORT * FROM SEC_2_Vec;
 IMPORT TextVectors as tv;
-IMPORT tv.Types;
+IMPORT * FROM Types;
 
-srec := sentiment.sent_model.sveclblrec;
-modrec := Types.TextMod;
+modrec := tv.Types.TextMod;
+Sentence := tv.Types.Sentence;
+Word := tv.Types.Word;
 
-sents := DATASET(WORKUNIT('W20200710-041732','Result 1'),srec);
+sents := DATASET(WORKUNIT('W20200710-041732','Result 1'),sveclblrec);
 model := DATASET(WORKUNIT('W20200710-041732','Result 2'),modrec);
 
-tsents := PROJECT(sents,TRANSFORM(Types.Sentence,SELF.sentId := LEFT.sentId,SELF.text := LEFT.text));
-
-Word := Types.Word;
-Sentence := Types.Sentence;
+tsents := PROJECT(sents,TRANSFORM(Sentence,SELF.sentId := LEFT.sentId,SELF.text := LEFT.text));
 
 testWords := DATASET([{1,'cash'},{2,'debt'},{3,'equity'},{4,'profit'},{5,'music'}],Word);
 testSents := DATASET([{1,'We expect to be profitable next quarter'},{2,'There is an unknown amount of litigation pending'}],Sentence);

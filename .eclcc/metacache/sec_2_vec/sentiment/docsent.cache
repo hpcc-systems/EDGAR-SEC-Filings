@@ -1,8 +1,7 @@
 <Cache hash="6442366839921406013">
 <Attr module="SEC_2_Vec.sentiment" name="docsent">
- <Depend module="" name="ml_core"/>
  <Depend module="SEC_2_Vec.sentiment" name="sent_model"/>
  <Depend module="" name="types"/>
- <Depend module="_versions.ML_Core.V3_2_2.ML_Core" name="types"/>
+ <Depend module="ML_Core" name="types"/>
 </Attr>
 </Cache>

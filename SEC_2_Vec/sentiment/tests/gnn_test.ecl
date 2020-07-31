@@ -1,4 +1,0 @@
-IMPORT GNN;
-IMPORT ML_Core;
-
-GNN.Test.TensTest;
