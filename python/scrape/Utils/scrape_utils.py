@@ -21,7 +21,5 @@ def highestmonth(x):
   if out == 0:
     year -= 1
     return [year,12]
-    #return [year,9]
   else:
     return [year,out]
-    #return [year,out-3]

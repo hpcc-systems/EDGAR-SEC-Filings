@@ -26,22 +26,7 @@ def xml_links(list10qlinks):
     html_docpage = driver.page_source
 
     soup = BeautifulSoup(html_docpage,"lxml")
-    #soup = BeautifulSoup(html_docpage,"lxml")
-    #next = False
-    #trs = soup.find_all('tr')
-    #for tr in trs:
-    #  cells = tr.find_all('td')
-    #  C=len(cells)
-    #  for i in range(C):
-    #    if next == True:
-    #      data_links.append((cells[i].get('href'),o[1],o[2]))
-    #      next = False
-    #    else:
-    #      continue
-    #    if 'XBRL INSTANCE DOCUMENT' in cells[i].getText():
-    #      next = True
-    #    else:
-    #      continue
+
     taglist = [tag for tag in soup.find_all('a')]
 
     for tag in taglist:
@@ -71,8 +56,7 @@ def xml_source(listxmllinks):
     time.sleep(2)
     dataxml = driver.page_source
     if '<html xmlns' in dataxml[:200]:
-        print('ERROR: html xmlns')
-        ##break
+        print('ERROR: html xmlns, fixing format')
         dataxml = fix(dataxml)
     data_full.append((dataxml,d[0],d[1],d[2]))
   
