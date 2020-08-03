@@ -1,7 +1,7 @@
 import time
 import selenium
 from selenium import *
-from fixhtmlform import * 
+from scrape_utils import * 
 from bs4 import BeautifulSoup
 
 def xml_links(list10qlinks):
@@ -31,7 +31,7 @@ def xml_links(list10qlinks):
 
     for tag in taglist:
       if 'htm.xml' in str(tag.text):
-        data_links.append((tag.get('href'),o[1],o[2]))
+        data_links.append((tag.get('href'),o[1],o[2],o[3]))
   
   driver.quit()
 
@@ -58,7 +58,7 @@ def xml_source(listxmllinks):
     if '<html xmlns' in dataxml[:200]:
         print('ERROR: html xmlns, fixing format')
         dataxml = fix(dataxml)
-    data_full.append((dataxml,d[0],d[1],d[2]))
+    data_full.append((dataxml,d[0],d[1],d[2],d[3]))
   
   driver.quit()
 
