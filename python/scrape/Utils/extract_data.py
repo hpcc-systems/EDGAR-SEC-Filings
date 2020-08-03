@@ -5,9 +5,9 @@ from bs4 import BeautifulSoup
 from getlinks import *
 from getxml import *
 
-def process_list(ticklist,formtyp):
+def process_list(ticklist):
   
-  linklist=links(ticklist,formtyp)
+  linklist=links(ticklist)
   xmllinks=xml_links(linklist)
   xmlsourc=xml_source(xmllinks)
   

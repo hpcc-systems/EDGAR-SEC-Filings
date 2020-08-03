@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 
 ##This script obtains the links to all 10-K/Q
 ##documents for the given list of ticker symbols
-def links(ticks,formtyp):
+def links(ticks):
   drivepath = '/usr/local/bin/chromedriver'
   out=[]
   is10q=False
@@ -99,8 +99,9 @@ def links(ticks,formtyp):
       if len(tag.contents) < 1:
         pass
       else:
-        if tag.contents[0] == formtyp: 
+        if tag.contents[0] in ['10-Q','10-K']:##== formtyp: 
           c=1
+          formtyp = tag.contents[0]
         elif c==1:
           link = tag.contents[0].get('href')
           c+=1
@@ -109,7 +110,7 @@ def links(ticks,formtyp):
         elif c==3:
           date = tag.contents[0]
           c=0
-          out.append((link,tick,date))
+          out.append((link,tick,formtyp,date))
   
   driver.quit()
   return out
