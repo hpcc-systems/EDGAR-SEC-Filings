@@ -4,6 +4,9 @@ import pandas as pd
 def fixdate(dateString):
   return ''.join(dateString.split('-'))
 
+def dashdate(dateString):
+  return '-'.join([dateString[:4],dateString[4:6],dateString[6:]])
+
 def foldpath(sectString):
   sectdict = {'Technology':'Technology','Health Care':'HealthCare','Consumer Services':'ConsumerServices','Consumer Durables':'ConsumerDurables','Capital Goods':'CapitalGoods',np.nan:'nan','Finance':'Finance','Miscellaneous':'Miscellaneous','Consumer Non-Durables':'ConsumerNonDurables','Public Utilities':'PublicUtilities','Basic Industries':'BasicIndustries','Transportation':'Transportation','Energy':'Energy'}
   return sectdict[sectString]
@@ -26,7 +29,7 @@ def highestmonth(x):
     return [year,out]
 
 def fix0s(n):
-  if n<10:
+  if int(n)<10:
     return '0'+str(n)
   else:
     return str(n)
@@ -44,7 +47,9 @@ def setq(x):
 def qenddate(date):
   last_month = setq(asmonth(date))*3
   if last_month == 6:
-    return '06-30'
+    return date[:4]+'-06-30'
+  elif last_month == 9:
+    return date[:4]+'-09-30'
   else:
     return date[:4]+'-'+fix0s(str(last_month))+'-31'
 

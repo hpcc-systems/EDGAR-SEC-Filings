@@ -1,7 +1,8 @@
 import time
 import selenium
 from selenium import *
-from scrape_utils import * 
+import Utils
+from Utils import scrape_utils
 from bs4 import BeautifulSoup
 
 def xml_links(list10qlinks):
@@ -57,7 +58,7 @@ def xml_source(listxmllinks):
     dataxml = driver.page_source
     if '<html xmlns' in dataxml[:200]:
         print('ERROR: html xmlns, fixing format')
-        dataxml = fix(dataxml)
+        dataxml = scrape_utils.fix(dataxml)
     data_full.append((dataxml,d[0],d[1],d[2],d[3]))
   
   driver.quit()
