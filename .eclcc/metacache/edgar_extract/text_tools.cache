@@ -1,4 +1,4 @@
-<Cache hash="6442366839921406013">
+<Cache hash="8742968833293342473">
 <Attr module="EDGAR_Extract" name="text_tools">
  <Depend module="EDGAR_Extract" name="extract_layout_modified"/>
  <Depend module="EDGAR_Extract" name="xbrl_extract_modified"/>
