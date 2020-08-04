@@ -34,10 +34,10 @@ Contains ECL scripts used for preprocessing, analysis and ML on SEC filings data
   /Internal/ contains utility files
     The only file currently present in Internal is svUtils, which has a variety of tools for use throughout the package, mostly vector manipulation
 
-  /python/ Contains python scripts used to obtain SEC filings and labels for sentiment modeling. There is a more descriptive README.md within this folder
+  /pythonSEC/ Contains python scripts used to obtain SEC filings and labels for sentiment modeling. There is a more descriptive README.md within this folder
 
   /SEC_2_Vec/ Contains the core scripts used for similarity and sentiment modeling
-    
+
     secvec_input takes a path to a numbered list of sentences for training
     
     secvec_input_lbl takes a path to a numbered list of sentences along with file names and labels from the original documents
@@ -50,6 +50,8 @@ Contains ECL scripts used for preprocessing, analysis and ML on SEC filings data
     lbljoin turns a plain-labeled dataset to s&p labeled
     
     /sentiment contains a variety of scripts used for sentiment modeling
+
+      /sentiment/tests contains tests demonstrating the various model approaches
       
       sectors contains a number of useful datasets and sets
       for use in identifying files and sentences by their
@@ -85,6 +87,8 @@ Contains ECL scripts used for preprocessing, analysis and ML on SEC filings data
       (trainrec format)
     
     /similarity contains a variety of scripts for the similarity modeling/analysis
+
+      /similarity/tests contains tests demonstrating the various model approaches
       
       docsim calculates the similarity between two documents
       
