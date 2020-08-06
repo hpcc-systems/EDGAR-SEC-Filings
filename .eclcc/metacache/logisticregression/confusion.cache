@@ -1,6 +1,0 @@
-<Cache hash="8742968833293342473">
-<Attr module="LogisticRegression" name="confusion">
- <Depend module="ML_Core" name="types"/>
- <Depend module="LogisticRegression" name="types"/>
-</Attr>
-</Cache>

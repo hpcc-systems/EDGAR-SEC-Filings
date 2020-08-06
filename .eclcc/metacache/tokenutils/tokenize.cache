@@ -1,7 +1,0 @@
-<Cache hash="8742968833293342473">
-<Attr module="tokenutils" name="tokenize">
- <Depend module="tokenutils" name="types"/>
- <Depend module="std" name="str"/>
- <Depend module="tokenutils" name="config"/>
-</Attr>
-</Cache>

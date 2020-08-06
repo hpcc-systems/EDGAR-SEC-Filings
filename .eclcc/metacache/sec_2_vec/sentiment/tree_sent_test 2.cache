@@ -1,9 +1,0 @@
-<Cache hash="3275204131620305104">
-<Attr module="SEC_2_Vec.sentiment" name="tree_sent_test 2">
- <Depend module="SEC_2_Vec.sentiment" name="sent_model"/>
- <Depend module="LearningTrees" name="classificationforest"/>
- <Depend module="SupportVectorMachines" name="svc"/>
- <Depend module="LogisticRegression" name="confusion"/>
- <Depend module="LogisticRegression" name="binomialconfusion"/>
-</Attr>
-</Cache>

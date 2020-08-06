@@ -1,9 +1,0 @@
-<Cache hash="8742968833293342473">
-<Attr module="TextVectors.Internal" name="sgd">
- <Depend module="TextVectors" name="types"/>
- <Depend module="std.system" name="thorlib"/>
- <Depend module="TextVectors.Internal" name="weights"/>
- <Depend module="std.system" name="log"/>
- <Depend module="TextVectors.Internal" name="svtrainnn"/>
-</Attr>
-</Cache>

@@ -1,6 +1,0 @@
-<Cache hash="3275204131620305104">
-<Attr module="SEC_2_Vec.sentiment.tests" name="compare_sec_accs">
- <Depend module="LogisticRegression" name="types"/>
- <Depend module="SEC_2_Vec.sentiment.tests" name="secmod_n"/>
-</Attr>
-</Cache>

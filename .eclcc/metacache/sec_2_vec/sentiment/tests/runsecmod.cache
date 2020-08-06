@@ -1,5 +1,0 @@
-<Cache hash="6442366839921406013">
-<Attr module="SEC_2_Vec.sentiment.tests" name="runsecmod">
- <Depend module="SEC_2_Vec.sentiment.tests" name="secmod_n"/>
-</Attr>
-</Cache>

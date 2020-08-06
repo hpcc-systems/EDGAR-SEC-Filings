@@ -1,7 +1,0 @@
-<Cache hash="8742968833293342473">
-<Attr module="TextVectors.Internal" name="corpus">
- <Depend module="TextVectors" name="types"/>
- <Depend module="std" name="str"/>
- <Depend module="std.system" name="thorlib"/>
-</Attr>
-</Cache>

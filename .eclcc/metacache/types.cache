@@ -1,5 +1,0 @@
-<Cache hash="8742968833293342473">
-<Attr name="types">
- <Depend module="TextVectors" name="types"/>
-</Attr>
-</Cache>

@@ -1,8 +1,0 @@
-<Cache hash="8742968833293342473">
-<Attr module="SEC_2_Vec.sentiment" name="doc_model">
- <Depend module="" name="types"/>
- <Depend module="Internal" name="svutils"/>
- <Depend module="TextVectors" name="types"/>
- <Depend module="TextVectors.Internal" name="svutils"/>
-</Attr>
-</Cache>

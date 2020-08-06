@@ -1,5 +1,0 @@
-<Cache hash="6442366839921406013">
-<Attr module="SEC_2_Vec.numextract" name="num_test">
- <Depend module="EDGAR_Extract" name="text_tools"/>
-</Attr>
-</Cache>

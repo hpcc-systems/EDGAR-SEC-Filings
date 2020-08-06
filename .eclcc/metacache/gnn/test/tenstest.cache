@@ -1,8 +1,0 @@
-<Cache hash="6442366839921406013">
-<Attr module="GNN.Test" name="tenstest">
- <Depend module="GNN" name="tensor"/>
- <Depend module="GNN.Internal" name="types"/>
- <Depend module="std.system" name="thorlib"/>
- <Depend module="GNN.Internal" name="tensextract"/>
-</Attr>
-</Cache>

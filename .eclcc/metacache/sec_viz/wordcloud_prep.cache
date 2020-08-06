@@ -1,6 +1,0 @@
-<Cache hash="6442366839921406013">
-<Attr module="SEC_Viz" name="wordcloud_prep">
- <Depend module="EDGAR_Extract" name="text_tools"/>
- <Depend module="SEC_2_Vec" name="secvec_input"/>
-</Attr>
-</Cache>

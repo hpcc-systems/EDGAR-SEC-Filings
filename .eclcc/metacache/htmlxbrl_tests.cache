@@ -1,6 +1,0 @@
-<Cache hash="6442366839921406013">
-<Attr name="htmlxbrl_tests">
- <Depend module="EDGAR_Extract" name="text_tools"/>
- <Depend module="EDGAR_Extract" name="xbrl_extract_modified"/>
-</Attr>
-</Cache>

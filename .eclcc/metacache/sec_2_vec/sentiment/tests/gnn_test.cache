@@ -1,5 +1,0 @@
-<Cache hash="6442366839921406013">
-<Attr module="SEC_2_Vec.sentiment.tests" name="gnn_test">
- <Depend module="GNN.Test" name="tenstest"/>
-</Attr>
-</Cache>

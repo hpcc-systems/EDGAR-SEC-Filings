@@ -1,7 +1,0 @@
-<Cache hash="6442366839921406013">
-<Attr module="SEC_2_Vec.similarity" name="docvecs">
- <Depend module="TextVectors.Internal" name="svutils"/>
- <Depend module="TextVectors" name="types"/>
- <Depend module="SEC_2_Vec.sentiment" name="sent_model"/>
-</Attr>
-</Cache>

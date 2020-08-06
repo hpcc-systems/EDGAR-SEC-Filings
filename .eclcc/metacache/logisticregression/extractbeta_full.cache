@@ -1,8 +1,0 @@
-<Cache hash="8742968833293342473">
-<Attr module="LogisticRegression" name="extractbeta_full">
- <Depend module="LogisticRegression" name="types"/>
- <Depend module="ML_Core" name="types"/>
- <Depend module="LogisticRegression" name="constants"/>
- <Depend module="ML_Core.Math" name="distributions"/>
-</Attr>
-</Cache>

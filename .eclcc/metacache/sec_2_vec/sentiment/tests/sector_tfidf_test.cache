@@ -1,7 +1,0 @@
-<Cache hash="8742968833293342473">
-<Attr module="SEC_2_Vec.sentiment.tests" name="sector_tfidf_test">
- <Depend module="TextVectors" name="types"/>
- <Depend module="SEC_2_Vec.sentiment" name="sent_model"/>
- <Depend module="SEC_2_Vec.sentiment" name="sector_tfidf"/>
-</Attr>
-</Cache>

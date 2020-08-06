@@ -1,6 +1,0 @@
-<Cache hash="6442366839921406013">
-<Attr name="get_dei_terms">
- <Depend module="EDGAR_Extract" name="raw_input_files"/>
- <Depend module="std" name="str"/>
-</Attr>
-</Cache>

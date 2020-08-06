@@ -1,6 +1,0 @@
-<Cache hash="6442366839921406013">
-<Attr module="SEC_2_Vec.similarity" name="qtrdocsim">
- <Depend module="SEC_2_Vec.sentiment" name="sent_model"/>
- <Depend module="SEC_2_Vec.similarity" name="simlabs"/>
-</Attr>
-</Cache>

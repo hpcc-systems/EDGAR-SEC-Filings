@@ -1,5 +1,0 @@
-<Cache hash="8742968833293342473">
-<Attr module="EDGAR_Extract" name="raw_input_files">
- <Depend module="std" name="uni"/>
-</Attr>
-</Cache>
