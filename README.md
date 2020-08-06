@@ -1,11 +1,11 @@
 #EDGAR-SEC-Filings
-Contains ECL scripts used for preprocessing, analysis and ML on SEC filings data.
+Contains ECL scripts used for preprocessing, analysis and ML on SEC filings data. To get started quickly, download xbrl10k.zip and xbrl10q.zip, then upload the unzipped versions to ECL Watch and spray as BLOB. Logical file paths can be used in the EDGAR_Extract/Text_Tools.XBRL_HTML_File method to obtain cleaned filings with separated fields that are easy to read and perform numeric analysis on. Labeled separated sentences that are mostly prepared for training can be obtained by running SEC_2_Vec/secvec_input_lbl with both logical file paths (and the appropriate arguments). A trained model as well as labeled plain and tfidf sentence vectors can be obtained by using the result of secvec_input_lbl in SEC_2_Vec/sentiment/sent_model.trndata_wlbl. Most of the model tests take a 'trainrec' dataset of the form that is output by trndata_wlbl.
 
   /Data/ contains data that can be used for convenient testing of this repository.
   
     /Data/tickers contains the list of company tickers that were used in the project, companylist.csv. Can potentially redo project with larger set of company tickers if a different file is used here.
     
-    labelguide_all contains s&p labels for all the 10-Q files initially extracted
+    labelguide_all_10q contains s&p labels for all the 10-Q files initially extracted
     
     labelguide_all_10k contains s&p labels for all the 10-K files initially extracted
     
