@@ -110,7 +110,5 @@ Contains ECL scripts used for preprocessing, analysis and ML on SEC filings data
     
     Types contains recordtypes for use in tokenization
 
-clean_extract_10k_10q is a test to ensure the extraction is performed cleanly. It will be removed.
-get_dei_terms is a test that was used to get all possible tags/fields from the XBRL document, used in development. It will be removed
-txt_extract_ficcorp is used to test extraction and reading of a fiction corpus in previous experiments. It will be removed.
+
 Types contains a variety of important recordtypes for use throughout this package.
