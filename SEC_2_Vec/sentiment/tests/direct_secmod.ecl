@@ -1,4 +1,6 @@
 IMPORT * FROM Types;
+IMPORT * FROM EDGAR_Extract.Text_Tools;
+IMPORT LearningTrees as LT;
 IMPORT LogisticRegression as LR;
 IMPORT * FROM SEC_2_Vec;
 IMPORT * FROM SEC_2_Vec.sentiment;
@@ -26,12 +28,58 @@ outrec := RECORD
     REAL8 sptfh_pode;
 END;
 
+secmod_n(STRING veclbltype = 'pl_vn',INTEGER n,STRING spliton='ticker',STRING mtyp='BLR') := FUNCTION
+    pl_vn := DATASET(WORKUNIT('W20200726-092906','plain_vanilla'),trainrec);
+    pl_tf := DATASET(WORKUNIT('W20200726-092906','plain_tfidf'),trainrec);
+
+    secn := sectors.sectorlist[n];
+
+    v := CASE(veclbltype, 'pl_vn' => pl_vn, 'pl_tf' => pl_tf, 'sp_vn' => lbljoin(pl_vn), 'sp_tf' => lbljoin(pl_tf));
+    pv := v(get_tick(fname) in sectors.ticksn(n));
+
+    dat_all := doc_model(pv);
+    dat := traintestsplit(dat_all,spliton,2);
+
+    dat_trn := dat.trn;
+    dat_tst := dat.tst;
+
+    ff := sent_model.getFields(dat_trn);
+    ff_tst := sent_model.getFields(dat_tst);
+
+    X := ff.NUMF;
+    Y := ff.DSCF;
+    Xh := ff_tst.NUMF;
+    Yh := ff_tst.DSCF;
+
+    plainblr := LR.BinomialLogisticRegression();
+    CF := LT.ClassificationForest();
+
+    modtyp := IF(mtyp='BLR',plainblr,CF);
+
+    mod := modtyp.GetModel(X,Y);
+
+    preds := modtyp.Classify(mod,X);
+    predsh := modtyp.Classify(mod,Xh);
+
+    pod := ml_ac.Accuracy(preds,Y);
+    podh := ml_ac.Accuracy(predsh,Yh);
+
+    result := MODULE
+        EXPORT p_in := pod[1].pod;
+        EXPORT pe_in := pod[1].pode;
+        EXPORT p_out := podh[1].pod;
+        EXPORT pe_out := podh[1].pode;
+    END;
+
+    RETURN result;
+END;
+
 outrec get_info(INTEGER n) := FUNCTION
     sec := sectors.sectorlist[n];
-    pl_vn := doc_secmod_n('pl_vn',n,'ticker');
-    pl_tf := doc_secmod_n('pl_tf',n,'ticker');
-    sp_vn := doc_secmod_n('sp_vn',n,'ticker');
-    sp_tf := doc_secmod_n('sp_tf',n,'ticker');
+    pl_vn := secmod_n('pl_vn',n,'ticker');
+    pl_tf := secmod_n('pl_tf',n,'ticker');
+    sp_vn := secmod_n('sp_vn',n,'ticker');
+    sp_tf := secmod_n('sp_tf',n,'ticker');
     vnpd := pl_vn.p_in;
     vnpe := pl_vn.pe_in;
     tfpd := pl_tf.p_in;

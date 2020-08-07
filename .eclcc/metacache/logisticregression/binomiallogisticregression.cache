@@ -1,0 +1,11 @@
+<Cache hash="6442366839921406013">
+<Attr module="LogisticRegression" name="binomiallogisticregression">
+ <Depend module="LogisticRegression" name="constants"/>
+ <Depend module="ML_Core" name="types"/>
+ <Depend module="ML_Core.Interfaces" name="iclassify"/>
+ <Depend module="LogisticRegression.IRLS" name="getmodel"/>
+ <Depend module="LogisticRegression" name="logitpredict"/>
+ <Depend module="LogisticRegression" name="extractbeta"/>
+ <Depend module="LogisticRegression" name="confusion"/>
+</Attr>
+</Cache>

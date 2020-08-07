@@ -1,0 +1,7 @@
+<Cache hash="6442366839921406013">
+<Attr module="LogisticRegression" name="datastats">
+ <Depend module="LogisticRegression" name="types"/>
+ <Depend module="LogisticRegression" name="constants"/>
+ <Depend module="ML_Core" name="types"/>
+</Attr>
+</Cache>

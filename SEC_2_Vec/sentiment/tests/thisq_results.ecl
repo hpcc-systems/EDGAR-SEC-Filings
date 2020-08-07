@@ -100,7 +100,14 @@ outtf := JOIN(thistfpredsdoc,perfno0,LEFT.fname=RIGHT.fname,TRANSFORM(perfrec,SE
                                                                 SELF.tot_return := RIGHT.tot_return,
                                                                 SELF.sp_return := RIGHT.sp_return));
 
+van1s := outvn(label='1');
+tfi1s := outtf(label='1');
+
 OUTPUT(outvn);
 OUTPUT(outtf);
 OUTPUT(vanpod[1].pode);
 OUTPUT(tfipod[1].pode);
+OUTPUT(SUM(van1s,van1s.tot_return),NAMED('vanilla_plain'));
+OUTPUT(SUM(van1s,van1s.sp_return),NAMED('vanilla_sandp'));
+OUTPUT(SUM(tfi1s,tfi1s.tot_return),NAMED('tfidf_plain'));
+OUTPUT(SUM(tfi1s,tfi1s.sp_return),NAMED('tfidf_sandp'));

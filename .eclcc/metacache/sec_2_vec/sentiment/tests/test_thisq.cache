@@ -1,0 +1,14 @@
+<Cache hash="6442366839921406013">
+<Attr module="SEC_2_Vec.sentiment.tests" name="test_thisq">
+ <Depend module="" name="types"/>
+ <Depend module="TextVectors" name="types"/>
+ <Depend module="SEC_2_Vec" name="secvec_input_lbl"/>
+ <Depend module="SEC_2_Vec.sentiment" name="sent_model"/>
+ <Depend module="SEC_2_Vec.sentiment" name="doc_model"/>
+ <Depend module="TextVectors" name="sentencevectors"/>
+ <Depend module="LogisticRegression" name="binomiallogisticregression"/>
+ <Depend module="ML_Core" name="analysis"/>
+ <Depend module="SEC_2_Vec" name="secvec_test_lbl"/>
+ <Depend module="SEC_2_Vec.sentiment" name="tfidf"/>
+</Attr>
+</Cache>

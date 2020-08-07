@@ -1,0 +1,7 @@
+<Cache hash="6442366839921406013">
+<Attr module="SEC_2_Vec" name="secvec_test_lbl">
+ <Depend module="EDGAR_Extract" name="text_tools"/>
+ <Depend module="" name="types"/>
+ <Depend module="EDGAR_Extract" name="extract_layout_modified"/>
+</Attr>
+</Cache>
