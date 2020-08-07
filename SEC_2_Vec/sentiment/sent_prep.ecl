@@ -1,5 +1,5 @@
 IMPORT STD;
-IMPORT tokenutils as tu;
+IMPORT Internal.tokenutils as tu;
 IMPORT * FROM TextVectors;
 IMPORT * FROM SEC_2_Vec;
 TextMod := Types.TextMod;

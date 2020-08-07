@@ -34,7 +34,16 @@ Contains ECL scripts used for preprocessing, analysis and ML on SEC filings data
     Text_Tools contains a variety of tools used for cleaning and various manipulations on strings and parsing. There is also a method called MoneyTable that is still partially experimental, which is meant to be able to extract all mentions of $ and % from a text block and list those values along with immediate text descriptions, to ease the analysis of quantitative details from these long notes sections.
 
   /Internal/ contains utility files
-    The only file currently present in Internal is svUtils, which has a variety of tools for use throughout the package, mostly vector manipulation
+
+    /tokenutils contains tokenization scripts copied from TextVectors that originally lived in the ML (not ML_Core) library, but for ease of use the relevant files were moved into this repository so as to avoid confusion between ML_Core and ML in any imports
+    
+      Config contains some configuration settings for the tokenization
+    
+      Tokenize contains tools for document tokenization
+    
+      Types contains recordtypes for use in tokenization
+
+    svUtils has a variety of tools for use throughout the package, mostly vector manipulation
 
   /pythonSEC/ Contains python scripts used to obtain SEC filings and labels for sentiment modeling. There is a more descriptive README.md within this folder
 
@@ -85,14 +94,6 @@ Contains ECL scripts used for preprocessing, analysis and ML on SEC filings data
     wordcloud_prep turns a filepath into a list of words in the corpus for use in word cloud creation
     
     sec_wordcloud creates a wordcloud from a prepared word list
-
-  /tokenutils contains tokenization scripts copied from TextVectors that originally lived in the ML (not ML_Core) library, but for ease of use the relevant files were moved into this repository so as to avoid confusion between ML_Core and ML in any imports
-    
-    Config contains some configuration settings for the tokenization
-    
-    Tokenize contains tools for document tokenization
-    
-    Types contains recordtypes for use in tokenization
 
 
 Types contains a variety of important recordtypes for use throughout this package.

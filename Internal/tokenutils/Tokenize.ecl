@@ -65,7 +65,7 @@ END;
 // If the lexicon has been 'pruned' then this could be lossy (removing stop words or low frequency words)
 // Equally if two lexicon words have the SAME id; then multiple words could be mapped onto one
 EXPORT ToO(DATASET(Types.WordElement) r, DATASET(Types.LexiconElement) l) := FUNCTION
-  IMPORT tokenutils as tu; // A little ugly - should not really import down here
+  IMPORT Internal.tokenutils as tu; // A little ugly - should not really import down here
 	Types.OWordElement take(r le, l ri) := TRANSFORM
 		SELF.word := ri.word_id;
 		SELF.total_words := ri.total_words;
