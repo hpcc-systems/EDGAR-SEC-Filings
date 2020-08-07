@@ -11,8 +11,14 @@ IMPORT * FROM Types;
 tmod := tv.types.textmod;
 tvec := tv.types.t_Vector;
 
-pl_vn := DATASET(WORKUNIT('W20200726-092906','plain_vanilla'),trainrec);
-pl_tf := DATASET(WORKUNIT('W20200726-092906','plain_tfidf'),trainrec);
+path10k := '~ncf::edgarfilings::raw::all_10k';
+path10q := '~ncf::edgarfilings::raw::all_10q';
+
+svl := secvec_input_lbl(path10q,path10k,TRUE,'plain');
+dat := sent_model.trndata_wlbl(svl);
+
+pl_vn := dat.s[1];
+pl_tf := dat.s[2];
 
 pvsl := simlabs(pl_vn);
 ptsl := simlabs(pl_tf);

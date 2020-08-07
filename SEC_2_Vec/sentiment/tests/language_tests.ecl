@@ -1,5 +1,6 @@
 IMPORT SEC_2_Vec;
 IMPORT * FROM SEC_2_Vec;
+IMPORT * FROM SEC_2_Vec.sentiment;
 IMPORT TextVectors as tv;
 IMPORT * FROM Types;
 
@@ -7,8 +8,15 @@ modrec := tv.Types.TextMod;
 Sentence := tv.Types.Sentence;
 Word := tv.Types.Word;
 
-sents := DATASET(WORKUNIT('W20200710-041732','Result 1'),sveclblrec);
-model := DATASET(WORKUNIT('W20200710-041732','Result 2'),modrec);
+path10k := '~ncf::edgarfilings::raw::all_10k';
+path10q := '~ncf::edgarfilings::raw::all_10q';
+
+svl := secvec_input_lbl(path10q,path10k,TRUE,'plain');
+dat := sent_model.trndata_wlbl(svl);
+
+spdat := lbljoin(dat.s[1]);
+sents := svl;
+model := dat.m;
 
 tsents := PROJECT(sents,TRANSFORM(Sentence,SELF.sentId := LEFT.sentId,SELF.text := LEFT.text));
 

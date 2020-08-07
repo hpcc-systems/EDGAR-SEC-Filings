@@ -13,8 +13,8 @@ EXPORT secvec_input_lbl(STRING inpath10q,STRING inpath10k,BOOLEAN prelabeled=TRU
     strec := RECORDOF(start10q);
     
     compjoin(DATASET(strec) stq,DATASET(strec) stk) := FUNCTION
-      path10q := '~ncf::edgarfilings::supp::sp_labels_all';
-      path10k := '~ncf::edgarfilings::supp::labelguide_all_10k';
+      path10q := '~ncf::edgarfilings::supp::sandplabels_10q';
+      path10k := '~ncf::edgarfilings::supp::sandplabels_10k';
 
       csvrec := RECORD
         STRING plainname;

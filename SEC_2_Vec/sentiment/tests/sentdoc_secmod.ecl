@@ -8,6 +8,12 @@ IMPORT LogisticRegression as LR;
 
 #OPTION('outputLimit',500);
 
+path10k := '~ncf::edgarfilings::raw::all_10k';
+path10q := '~ncf::edgarfilings::raw::all_10q';
+
+svl := secvec_input_lbl(path10q,path10k,TRUE,'plain');
+dat := sent_model.trndata_wlbl(svl);
+
 outrec := RECORD
     STRING sector;
     REAL8 hpod_plvn;
@@ -30,8 +36,8 @@ END;
 
 secmod_n(STRING veclbltype = 'pl_vn',INTEGER n,STRING spliton='filename') := FUNCTION
     
-    pl_vn := DATASET(WORKUNIT('W20200726-092906','plain_vanilla'),trainrec);
-    pl_tf := DATASET(WORKUNIT('W20200726-092906','plain_tfidf'),trainrec);
+    pl_vn := dat.s[1];
+    pl_tf := dat.s[2];
 
     secn := sectors.sectorlist[n];
 

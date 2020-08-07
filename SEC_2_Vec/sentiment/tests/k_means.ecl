@@ -1,6 +1,7 @@
 IMPORT ML_Core;
 IMPORT KMeans;
 IMPORT SEC_2_Vec;
+IMPORT * FROM SEC_2_Vec;
 IMPORT * FROM SEC_2_Vec.sentiment;
 IMPORT * FROM Types;
 
@@ -23,17 +24,19 @@ centroid_ds_2 := PROJECT(hundred0s,TRANSFORM(nf,
 centroids_artificial := centroid_ds_1+centroid_ds_2;
 
 
-vansents := DATASET(WORKUNIT('W20200713-063347','sandp_label_vanilla_data'),trainrec);
+path10k := '~ncf::edgarfilings::raw::all_10k';
+path10q := '~ncf::edgarfilings::raw::all_10q';
 
-//zeroids := SET(vansents(label='0'),id);
-//oneids := SET(vansents(label='1'),id);
+svl := secvec_input_lbl(path10q,path10k,TRUE,'plain');
+dat := sent_model.trndata_wlbl(svl);
+
+vansents := lbljoin(dat.s[1]);
 
 ff := sent_model.getFields(vansents);
 X := ff.NUMF;
 Y := ff.DSCF;
 
-centroids_x := X(id IN [1,100]);//,10000]);
-//centroids_x := X(id IN [zeroids[1],oneids[1]]);
+centroids_x := X(id IN [1,100]);
 
 Max_iterations := 100;
 Tolerance := 0.0001;
@@ -42,7 +45,6 @@ Tolerance := 0.0001;
 //Setup the model
 Pre_Model := KMeans.KMeans(Max_iterations, Tolerance);
 //Train the model
-//Model := Pre_Model.Fit( X , centroids_x );
 Model := Pre_Model.Fit( X , centroids_artificial );
 
 //Coordinates of cluster centers

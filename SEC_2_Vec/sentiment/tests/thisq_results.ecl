@@ -10,10 +10,9 @@ IMPORT * FROM Types;
 t_Vector := tv.Types.t_Vector;
 Sentence := tv.Types.Sentence;
 
-path10k := '~ncf::edgarfilings::raw::labels_allsecs_all_10k';
-path10q := '~ncf::edgarfilings::raw::plainlabel_allsecs_all';
-pathqthisq := '~ncf::edgarfilings::raw::thisq_10qs';
-pathkthisq := '~ncf::edgarfilings::raw::thisq_blankcarat10q';
+path10k := '~ncf::edgarfilings::raw::all_10k';
+path10q := '~ncf::edgarfilings::raw::all_10q';
+pathqthisq := '~ncf::edgarfilings::raw::thisq';
 pathperf := '~ncf::edgarfilings::supp::thisq_perf';
 
 csvrec := RECORD
@@ -21,10 +20,6 @@ csvrec := RECORD
     REAL8 tot_return;
     REAL8 sp_return;
 END;
-
-// OUTPUT(DATASET(pathperf,csvrec,CSV(HEADING(1))));
-// OUTPUT(secvec_test_lbl(pathqthisq));
-// OUTPUT(secvec_input_lbl(path10q,path10k,TRUE,'plain'));
 
 trainsents := secvec_input_lbl(path10q,path10k,TRUE,'plain');
 tm1 := sent_model.trndata_wlbl(trainsents);
@@ -56,14 +51,13 @@ vanpod := ML_Core.Analysis.Classification.Accuracy(vanpreds,vnY);
 tfipod := ML_Core.Analysis.Classification.Accuracy(tfipreds,tfY);
 
 sents := secvec_test_lbl(pathqthisq);
-//dat := sent_model.trndata_wlbl(sents);
 rawsents := PROJECT(sents,TRANSFORM(Sentence,SELF.sentId := LEFT.sentId,SELF.text := LEFT.text));
 van := JOIN(sv.GetSentVectors(tm1.m,rawsents),sents,LEFT.sentId = RIGHT.sentId,TRANSFORM(trainrec,SELF.id := LEFT.sentId,
                                                                                                 SELF.text := LEFT.text,
                                                                                                 SELF.vec := LEFT.vec,
                                                                                                 SELF.fname := RIGHT.fname,
                                                                                                 SELF.label := RIGHT.label));//dat[1];
-tfi := tfidf(tm1.m,sents);//dat[2];
+tfi := tfidf(tm1.m,sents);
 
 thisdocvan := doc_model(van);
 thisdoctfi := doc_model(tfi);

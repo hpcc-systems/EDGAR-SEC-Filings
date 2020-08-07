@@ -5,10 +5,8 @@ IMPORT * FROM SEC_2_Vec.sentiment;
 IMPORT * FROM Types;
 
 EXPORT lbljoin(DATASET(trainrec) dset) := FUNCTION
-    //path10q := '~ncf::edgarfilings::supp::sp_labels_all';
-    //path10k := '~ncf::edgarfilings::supp::labelguide_all_10k';
-    path10q := '~ncf::edgarfilings::supp::fixed_sandplabels_10q';
-    path10k := '~ncf::edgarfilings::supp::fixed_sandplabels_10k';
+    path10q := '~ncf::edgarfilings::supp::sandplabels_10q';
+    path10k := '~ncf::edgarfilings::supp::sandplabels_10k';
 
     csvrec := RECORD
         STRING plainname;

@@ -1,7 +1,7 @@
 IMPORT * FROM SEC_Viz;
 IMPORT Visualizer;
 
-path := '~ncf::edgarfilings::raw::tech10qs_medium';
+path := '~ncf::edgarfilings::raw::all_10q';
 
 ds := OUTPUT(SORT(sec_wordcloud.word_freqs(path,'SEC'),-wordcount)[25..50],NAMED('wordcloud'));
 ds;

@@ -3,11 +3,12 @@
  <Depend module="" name="types"/>
  <Depend module="EDGAR_Extract" name="text_tools"/>
  <Depend module="ML_Core" name="analysis"/>
+ <Depend module="SEC_2_Vec" name="secvec_input_lbl"/>
+ <Depend module="SEC_2_Vec.sentiment" name="sent_model"/>
  <Depend module="SEC_2_Vec.sentiment" name="sectors"/>
  <Depend module="SEC_2_Vec" name="lbljoin"/>
  <Depend module="SEC_2_Vec.sentiment" name="doc_model"/>
  <Depend module="SEC_2_Vec" name="traintestsplit"/>
- <Depend module="SEC_2_Vec.sentiment" name="sent_model"/>
  <Depend module="LogisticRegression" name="binomiallogisticregression"/>
  <Depend module="LearningTrees" name="classificationforest"/>
 </Attr>

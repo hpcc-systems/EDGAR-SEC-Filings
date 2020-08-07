@@ -1,0 +1,10 @@
+<Cache hash="6442366839921406013">
+<Attr module="SEC_2_Vec.sentiment.tests" name="gnn_model">
+ <Depend module="ML_Core" name="types"/>
+ <Depend module="GNN" name="tensor"/>
+ <Depend module="GNN" name="gnni"/>
+ <Depend module="SEC_2_Vec" name="secvec_input_lbl"/>
+ <Depend module="SEC_2_Vec.sentiment" name="sent_model"/>
+ <Depend module="SEC_2_Vec" name="lbljoin"/>
+</Attr>
+</Cache>

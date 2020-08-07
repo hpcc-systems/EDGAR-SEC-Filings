@@ -1,6 +1,7 @@
 IMPORT PYTHON3 AS Python;
 IMPORT ML_Core;
 IMPORT * FROM Python;
+IMPORT * FROM SEC_2_Vec;
 IMPORT * FROM SEC_2_Vec.sentiment;
 IMPORT * FROM sentiment.tests;
 IMPORT * FROM GNN;
@@ -10,7 +11,6 @@ df := ML_Core.Types.DiscreteField;
 t_tens := Tensor.R4.t_Tensor;
 
 mod_form :=  ['Dense(64, input_shape=(100,))',
-//[//'GRU(units=32,dropout=0.2,recurrent_dropout=0.2)',
             'Dense(32)',
              'Dense(1,activation="sigmoid")'];
 
@@ -19,7 +19,14 @@ mod_comp := ['loss="binary_crossentropy",optimizer="adam",metrics=["accuracy"]']
 sess_a := GNNI.GetSession();
 sess_b := GNNI.DefineModel(sess_a,mod_form,mod_comp[1]);
 
-spdat := sandplblvn;
+path10k := '~ncf::edgarfilings::raw::all_10k';
+path10q := '~ncf::edgarfilings::raw::all_10q';
+
+svl := secvec_input_lbl(path10q,path10k,TRUE,'plain');
+dat := sent_model.trndata_wlbl(svl);
+
+spdat := lbljoin(dat.s[1]);
+
 ff := sent_model.getFields(spdat);
 Xn := ff.NUMF;
 Yd := ff.DSCF;

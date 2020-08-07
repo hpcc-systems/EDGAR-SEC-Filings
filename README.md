@@ -1,17 +1,17 @@
 #EDGAR-SEC-Filings
 Contains ECL scripts used for preprocessing, analysis and ML on SEC filings data. To get started quickly, download xbrl10k.zip and xbrl10q.zip, then upload the unzipped versions to ECL Watch and spray as BLOB. Logical file paths can be used in the EDGAR_Extract/Text_Tools.XBRL_HTML_File method to obtain cleaned filings with separated fields that are easy to read and perform numeric analysis on. Labeled separated sentences that are mostly prepared for training can be obtained by running SEC_2_Vec/secvec_input_lbl with both logical file paths (and the appropriate arguments). A trained model as well as labeled plain and tfidf sentence vectors can be obtained by using the result of secvec_input_lbl in SEC_2_Vec/sentiment/sent_model.trndata_wlbl. Most of the model tests take a 'trainrec' dataset of the form that is output by trndata_wlbl. **NOTE: TextVectors can hang when stuck on local minima, if text model training takes more than ~5 minutes without displaying messages regarding Epoch/Loss changes, restart workunit**
 
-  /Data/ contains data that can be used for convenient testing of this repository.
+  /Data/ contains data that can be used for convenient testing of this repository. **When running data in models, either save the .zip files as ncf::edgarfilings::raw::all_10q (or 10k if appropriate) and the xbrlthisqtr.zip file as ncf::edgarfilings::raw::thisq OR scrape using pythonSEC, upload the results, and use the same logical names for the 10-Q, 10-K, and THISQ files**
   
     /Data/tickers contains the list of company tickers that were used in the project, companylist.csv. Can potentially redo project with larger set of company tickers if a different file is used here.
     
-    labelguide_all_10q contains s&p labels for all the 10-Q files initially extracted
+    labelguide_all_10q contains s&p labels for all the 10-Q files initially extracted, save as logical file 'ncf::edgarfilings::supp::sandplabels_10q'
     
-    labelguide_all_10k contains s&p labels for all the 10-K files initially extracted
+    labelguide_all_10k contains s&p labels for all the 10-K files initially extracted, save as logical file 'ncf::edgarfilings::supp::sandplabels_10k'
     
-    sector_guide_all contains a list of all tickers and what sector they are from
+    sector_guide_all contains a list of all tickers and what sector they are from, save as logical file 'ncf::edgarfilings::supp::sector_guide_all'
     
-    thisq_perf contains the performance (according to plain and s&p scheme) of THISQ filings in the initial extraction: if a filing is from THISQ, it cant be compared to the end of its quarter, so instead this file contains that stock's percent return overall and compared to the S&P from the date of filing until the date that the extraction is being run (used pd.datetime.now())
+    thisq_perf contains the performance (according to plain and s&p scheme) of THISQ filings in the initial extraction: if a filing is from THISQ, it cant be compared to the end of its quarter, so instead this file contains that stock's percent return overall and compared to the S&P from the date of filing until the date that the extraction is being run (used pd.datetime.now()), save as logical file 'ncf::edgarfilings::supp::thisq_perf'
     
     ticks_10k contains a list of stocks for which 10-K filings exist in the initial extraction
     

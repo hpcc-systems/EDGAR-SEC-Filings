@@ -1,0 +1,8 @@
+<Cache hash="6442366839921406013">
+<Attr module="SEC_2_Vec.similarity" name="simlabs">
+ <Depend module="ML_Core" name="types"/>
+ <Depend module="EDGAR_Extract" name="text_tools"/>
+ <Depend module="" name="types"/>
+ <Depend module="SEC_2_Vec.similarity" name="docsim"/>
+</Attr>
+</Cache>
