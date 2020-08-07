@@ -26,7 +26,7 @@ These methods are designed to either train text models or use trained text model
 
     docsent takes a set of predictions for sentence sentiment and averages the 1-dimensional predictions for each filing to obtain a 1-dimensional value that can be used as the independent variable in a document sentiment model
 
-    sectors contains a variety of methods/sets/resources for subsetting by sector/identifying the sector a given stock ticker is associated with
+    sectors contains a variety of methods/sets/resources for subsetting by sector/identifying the sector a given stock ticker is associated with **The sector listing is based on this file as well, and further study by sector would be dependent on any complete set of tickers/info chosen**
 
     sent_model contains a variety of methods for preparing for sentiment modeling, including trndata_wlbl which actually trains a text model (with vanilla as well as tfidf vectors) from a list of sentences, and getFields(), which extracts NumericField and DiscreteField format from trainrec containing 100-dimensional vectors
 
